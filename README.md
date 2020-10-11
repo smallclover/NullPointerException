@@ -5,7 +5,7 @@ www.nullpointerexception.cf
 目前暂时先以搭建一个完整的博客为主
 
 ## 关于配置
-+ 在resources的根目录下创建application-global.yml文件然后根据
++ 在resources的根目录下创建application-global.yml文件然后根据的配置的变量创建相关的变量即可。 
 ```yaml
 
     application.yaml 
@@ -13,7 +13,7 @@ www.nullpointerexception.cf
     application-prod.yml
 
 ```
-的配置的变量创建相关的变量即可。 
+
 
 + 手动在User表里追加后台登录的用户
 
