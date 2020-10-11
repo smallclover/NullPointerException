@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:with="title='添加开发日志', active='develop-log-add'">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <title>NPE Admin | Develop-Log-Add</title>
+    <th:block th:replace="/admin/common/_common_css::common_css">
+        <!--/* css */-->
+    </th:block>
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+    <th:block th:replace="/admin/common/_navbar::navbar(${active})">
+        <!--/* 导航条 */-->
+    </th:block>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>[[${title}]]</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">首页</a></li>
+                            <li class="breadcrumb-item active">[[${title}]]</li>
+                        </ol>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">[[${title}]]</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="inputName">名称</label>
+                                <input type="text" id="inputName" class="form-control" placeholder="名称">
+                            </div>
+                            <div class="form-group">
+                                <label for="inputDescription">问题描述</label>
+                                <textarea id="inputDescription" class="form-control" rows="4" placeholder="在此输入问题描述"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputStatus">问题类型</label>
+                                <select class="form-control custom-select" id="inputStatus">
+                                    <option selected disabled>选择一项</option>
+                                    <option selected>开发</option>
+                                    <option>测试</option>
+                                    <option>线上</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="author">提出人</label>
+                                <input type="text" id="author" class="form-control" placeholder="提出人">
+                            </div>
+                            <div class="text-right">
+                                <a class="btn btn-default waves-effect waves-light" th:href="@{/admin/article/edit}">
+                                    取消
+                                </a>
+                                <button id="submit_form" type="button" class="btn btn-success waves-effect waves-light">
+                                    发布
+                                </button>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+            </div>
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    <!-- Main Footer -->
+    <footer th:replace="/admincommon/_footer::footer">
+        <!--页脚-->
+    </footer>
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+        <!-- Control sidebar content goes here -->
+    </aside>
+    <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+
+<!--/* js */-->
+<th:block th:replace="/admin/common/_common_js::common_js">
+    <!--/* replace的引用目录必须从根目录开始 */-->
+</th:block>
+<script type="text/javascript" th:inline="javascript">
+    $("#submit_form").bind("click", function () {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
+        let name = $("#inputName").val();
+        let desc = $("#inputDescription").val();
+        let status = $( "#inputStatus option:selected" ).text()
+        let author = $("#author").val();
+        $.ajax({
+            url: /*[[@{/admin/develop-log/add/do}]]*/"",
+            data: {
+                name: name,
+                desc: desc,
+                status: status,
+                author: author
+            },
+            type: "POST",
+            // contentType
+            dataType: "text",
+            // 因为返回的不是严格json格式的数据
+            // jquery1.4版本以后对格式严格要求
+            // 所以即使请求成功也会调到error函数
+            // 本地开发测试的时候讲dataType改为text也行
+            success: function(data) {
+                console.log("success");
+                Toast.fire({
+                    icon: 'success',
+                    title: '插入成功'
+                });
+            },
+            error: function (data) {
+                console.log("error");
+                Toast.fire({
+                    icon: 'error',
+                    title: '插入失败，请检查日志'
+                });
+            }
+        });
+    });
+</script>
+</body>
+</html>

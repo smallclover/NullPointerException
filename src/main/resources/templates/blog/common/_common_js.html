@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+
+<body>
+<th:block id="js" th:fragment="common_js">
+
+    <!-- Bootstrap core JavaScript -->
+    <script th:src="@{/blog/vendor/jquery/jquery.min.js}"></script>
+    <script th:src="@{/blog/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+    <!-- Custom scripts for this template -->
+    <script th:src="@{/blog/js/clean-blog.min.js}"></script>
+    <script th:src="@{/blog/plugins/pace/pace.min.js}"></script>
+</th:block>
+</body>
+</html>

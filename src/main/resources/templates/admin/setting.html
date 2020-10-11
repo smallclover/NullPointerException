@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:with="title='系统设置', active='setting'">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <title>NPE Admin | Setting</title>
+    <th:block th:replace="/admin/common/_common_css::common_css">
+        <!--/* css */-->
+    </th:block>
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+    <th:block th:replace="/admin/common/_navbar::navbar(${active})">
+        <!--/* 导航条 */-->
+    </th:block>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>[[${title}]]</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">首页</a></li>
+                            <li class="breadcrumb-item active">[[${title}]]</li>
+                        </ol>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <!-- left column -->
+                <div class="col-md-6">
+                    <!-- general form elements -->
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">全局设置</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <form role="form">
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="siteName">站点名称</label>
+                                    <input type="text" class="form-control" id="siteName" placeholder="站点名称"
+                                    th:value="${setting.siteName}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="siteDesc">站点描述</label>
+                                    <input type="text" class="form-control" id="siteDesc" placeholder="站点描述"
+                                    th:value="${setting.siteDesc}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="appVersion">应用版本</label>
+                                    <input type="text" class="form-control" id="appVersion" placeholder="应用版本"
+                                    th:value="${setting.appVersion}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="kong">待定</label>
+                                    <input type="text" class="form-control" id="kong" placeholder="待定" disabled>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+
+                            <div class="card-footer">
+                                <!--这里如果type=sumbit swal弹窗会一闪而过-->
+                                <button type="button" class="btn btn-primary" onclick="updateSystemSetting()">保存设置</button>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!--/.col (left) -->
+                <!-- right column -->
+                <div class="col-md-6">
+                    <!-- general form elements disabled -->
+                    <div class="card card-green">
+                        <div class="card-header">
+                            <h3 class="card-title">个性化设置</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <form role="form">
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="github">github</label>
+                                    <input type="text" class="form-control" id="github" placeholder="github"
+                                           th:value="${setting.github}">
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+
+                            <div class="card-footer">
+                                <button type="button" class="btn btn-success" onclick="updateSystemSetting()">保存设置</button>
+                            </div>
+                        </form>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!--/.col (right) -->
+            </div>
+            <!-- /.row -->
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    <!-- Main Footer -->
+    <footer th:replace="/admin/common/_footer::footer">
+        <!--页脚-->
+    </footer>
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+        <!-- Control sidebar content goes here -->
+    </aside>
+    <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+
+<!--/* js */-->
+<th:block th:replace="/admin/common/_common_js::common_js">
+    <!--/* replace的引用目录必须从根目录开始 */-->
+</th:block>
+<script type="text/javascript" th:inline="javascript">
+        function updateSystemSetting() {
+            let modifiedSiteName = $('#siteName').val();
+            let modifiedSiteDesc = $('#siteDesc').val();
+            let modifiedAppVersion = $('#appVersion').val();
+            let modifiedGithub = $('#github').val();
+
+            let originSiteName = /*[[${setting.siteName}]]*/'';
+            let originSiteDesc = /*[[${setting.siteDesc}]]*/'';
+            let originAppVersion = /*[[${setting.appVersion}]]*/'';
+            let originGithub = /*[[${setting.github}]]*/'';
+            let id = /*[[${setting.id}]]*/'';
+            if (modifiedSiteName === originSiteName){
+                modifiedSiteName = null;
+            }
+            if (modifiedSiteDesc === originSiteDesc){
+                modifiedSiteDesc = null;
+            }
+            if (modifiedAppVersion === originAppVersion){
+                modifiedAppVersion = null;
+            }
+            if (modifiedGithub === originGithub){
+                modifiedGithub = null;
+            }
+
+            let setting = {
+                id:id,
+                siteName:originSiteName,
+                siteDesc:originSiteDesc,
+                appVersion:originAppVersion,
+                github:originGithub
+            }
+
+            Swal.fire({
+                title: '更新',
+                text: "确定要更新?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: '更新',
+                cancelButtonText:'取消',
+            }).then((result) => {
+                console.log("result")
+                console.log(JSON.stringify(setting))
+                if (result.value) {
+                    $.ajax({
+                        url: /*[[@{/admin/setting/update}]]*/"",
+                        data: JSON.stringify(setting),
+                        type: "POST",
+                        dataType: "json",
+                        contentType:"application/json",
+                        success: function(data) {
+                            console.log("success");
+                            Swal.fire(
+                                '更新',
+                                '更新成功',
+                                'success'
+                            )
+                            window.location.reload();
+                        },
+                        error: function (data) {
+                            console.log("error");
+                            Swal.fire(
+                                '更新',
+                                '更新失败',
+                                'error'
+                            )
+                        }
+                    });
+                }
+            })
+        }
+</script>
+</body>
+</html>

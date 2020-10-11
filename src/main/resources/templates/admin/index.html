@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:with="title='首页', active='dashboard'">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>NPE Admin | Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <th:block th:replace="/admin/common/_common_css::common_css">
+  <!--/* css */-->
+  </th:block>
+</head>
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+  <th:block th:replace="/admin/common/_navbar::navbar(${active})">
+    <!--/* 导航条 */-->
+  </th:block>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">仪表盘</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">首页</a></li>
+              <li class="breadcrumb-item active">仪表盘</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3>[[${statistics.articles}]]</h3>
+                <p>已发表文章数</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-ios-book-outline"></i>
+              </div>
+              <a th:href="@{/admin/article/manager}" class="small-box-footer">查看更多<i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-success">
+              <div class="inner">
+                <h3>[[${statistics.comments}]]</h3>
+                <p>评论总数</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-chatbubble-working"></i>
+              </div>
+              <a th:href="@{/admin/comment/manager}" class="small-box-footer">查看更多<i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-warning">
+              <div class="inner">
+                <h3>[[${statistics.developLogs}]]</h3>
+                <p>开发日志数</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-ios-list"></i>
+              </div>
+              <a th:href="@{/admin/develop-log/manager}" class="small-box-footer">查看更多<i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-danger">
+              <div class="inner">
+                <h3>[[${statistics.attaches}]]</h3>
+                <p>已上传附件数</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-ios-folder-outline"></i>
+              </div>
+              <a th:href="@{/admin/attach}" class="small-box-footer">查看更多<i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+        </div>
+        <!-- /.row -->
+        <!-- Main row -->
+        <div class="row">
+          <div class="col-md-6">
+            <!-- DONUT CHART -->
+            <div class="card card-danger">
+              <div class="card-header">
+                <h3 class="card-title">Donut Chart</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                  <button type="button" class="btn btn-tool" data-card-widget="remove">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                <canvas id="donutChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+
+          </div>
+          <!-- /.col -->
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Simple Full Width Table</h3>
+
+                <div class="card-tools">
+                  <ul class="pagination pagination-sm float-right">
+                    <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
+                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+                  </ul>
+                </div>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body p-0">
+                <table class="table">
+                  <thead>
+                  <tr>
+                    <th style="width: 10px">#</th>
+                    <th>Task</th>
+                    <th>Progress</th>
+                    <th style="width: 40px">Label</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr>
+                    <td>1.</td>
+                    <td>Update software</td>
+                    <td>
+                      <div class="progress progress-xs">
+                        <div class="progress-bar progress-bar-danger" style="width: 55%"></div>
+                      </div>
+                    </td>
+                    <td><span class="badge bg-danger">55%</span></td>
+                  </tr>
+                  <tr>
+                    <td>2.</td>
+                    <td>Clean database</td>
+                    <td>
+                      <div class="progress progress-xs">
+                        <div class="progress-bar bg-warning" style="width: 70%"></div>
+                      </div>
+                    </td>
+                    <td><span class="badge bg-warning">70%</span></td>
+                  </tr>
+                  <tr>
+                    <td>3.</td>
+                    <td>Cron job running</td>
+                    <td>
+                      <div class="progress progress-xs progress-striped active">
+                        <div class="progress-bar bg-primary" style="width: 30%"></div>
+                      </div>
+                    </td>
+                    <td><span class="badge bg-primary">30%</span></td>
+                  </tr>
+                  <tr>
+                    <td>4.</td>
+                    <td>Fix and squish bugs</td>
+                    <td>
+                      <div class="progress progress-xs progress-striped active">
+                        <div class="progress-bar bg-success" style="width: 90%"></div>
+                      </div>
+                    </td>
+                    <td><span class="badge bg-success">90%</span></td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row (main row) -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+  <footer th:replace="/admin/common/_footer::footer">
+    <!--页脚-->
+  </footer>
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+  </aside>
+  <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+
+<!--/* js */-->
+<th:block th:replace="/admin/common/_common_js::common_js">
+<!--/* replace的引用目录必须从根目录开始 */-->
+</th:block>
+</body>
+<script type="application/javascript" th:inline="javascript">
+  var donutChartCanvas = $('#donutChart').get(0).getContext('2d')
+  var donutData        = {
+    labels: /*[[${browser.labels}]]*/ [],
+    datasets: [
+      {
+        data: /*[[${browser.dataSet.data}]]*/ [],
+        backgroundColor : /*[[${browser.dataSet.backgroundColor}]]*/ [],
+      }
+    ]
+  }
+  var donutOptions     = {
+    maintainAspectRatio : false,
+    responsive : true,
+  }
+  //Create pie or douhnut chart
+  // You can switch between pie and douhnut using the method below.
+  var donutChart = new Chart(donutChartCanvas, {
+    type: 'doughnut',
+    data: donutData,
+    options: donutOptions
+  })
+
+</script>
+</html>

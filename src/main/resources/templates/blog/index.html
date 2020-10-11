@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:with="title='首页', top_poster='HelloWorld', bottom_content='程序员都是会变魔术的魔法师'">
+<head>
+    <meta charset="utf-8">
+    <!--/* 需要这一行 可以让网页的宽度自动适应手机屏幕的宽度*/-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>[[${title}]]</title>
+    <th:block th:replace="/blog/common/_common_css::common_css">
+
+    </th:block>
+</head>
+<body>
+
+<th:block th:replace="/blog/common/_head::navbar">
+
+</th:block>
+<th:block th:replace="/blog/common/_poster::navbar(${top_poster}, ${bottom_content})">
+
+</th:block>
+    <div style="text-align: center;">
+        <main>
+            <h3>
+                网站建设中
+                最后更新时间:2020/07/05
+                <br>
+            </h3>
+            <img th:src="@{/blog/img/project_under_construction.gif}" alt="开发中"/>
+        </main>
+    </div>
+    <th:block th:replace="/blog/common/_footer::footer">
+
+    </th:block>
+</body>
+<th:block th:replace="/blog/common/_common_js::common_js">
+
+</th:block>
+</html>

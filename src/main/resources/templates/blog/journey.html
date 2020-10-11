@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" th:with="title='旅行日志', top_poster='游'
+, bottom_content='采菊东篱下，悠然见南山'">
+<head>
+    <meta charset="UTF-8">
+    <title>旅行轨迹</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <th:block th:replace="/blog/common/_common_css::common_css">
+
+    </th:block>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.1.0/dist/leaflet.css" integrity="sha512-wcw6ts8Anuw10Mzh9Ytw4pylW8+NAD4ch3lqm9lzAsTxg0GFeJgoAtxuCLREZSC5lUXdVyo/7yfsqFjQ4S+aKw==" crossorigin="" />
+</head>
+<body>
+
+<th:block th:replace="/blog/common/_head::navbar">
+
+</th:block>
+<th:block th:replace="/blog/common/_poster::navbar(${top_poster}, ${bottom_content})">
+
+</th:block>
+
+<!-- 地图容器 -->
+<div id="journeyMap" style="height: 900px"></div>
+
+<th:block th:replace="/blog/common/_footer::footer">
+
+</th:block>
+
+<th:block th:replace="/blog/common/_common_js::common_js">
+
+</th:block>
+<script src="https://unpkg.com/leaflet@1.1.0/dist/leaflet.js" integrity="sha512-mNqn2Wg7tSToJhvHcqfzLMU6J4mkOImSPTxVZAdo+lcPlk+GhZmYgACEe0x35K7YzW1zJ7XyJV/TT1MrdXvMcA==" crossorigin=""></script>
+<script type="text/javascript" th:inline="javascript">
+    $(document).ready(function(){
+        // 地图中心点纬度
+        let centerLa = /*[[${center.latitude}]]*/'';
+        // 地图中心点经度
+        let centerLo = /*[[${center.longitude}]]*/'';
+        var map = L.map('journeyMap',{
+            center: [centerLa,centerLo],
+            zoom: 14
+        });
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+        $.ajax({
+            type:"GET",
+            url:/*[[@{/blog/journey/all}]]*/'',
+            dataType:"json",
+            success:function (data) {
+                //i表示在data中的索引位置，n表示包含的信息的对象
+                $.each(data, function (i, n) {
+                    var imgUrl = n["picPath"];
+                    var sucontents = n["desc"] + "<br><img src='"+ imgUrl +"' width='500' height='375'>"
+                    var mpoint = [n["latitude"],n["longitude"]];
+                    var popup = L.popup({ maxWidth: 550 }).setContent(sucontents);
+                    L.marker(mpoint, { draggable: true }).bindPopup(popup).bindTooltip(n["title"]).addTo(map);
+                });
+            }
+        });
+    });
+</script>
+</body>
+
+</html>

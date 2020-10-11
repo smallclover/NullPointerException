@@ -1,0 +1,34 @@
+# product env
+spring:
+  datasource:
+    url: ${npe.prod-datasource.url}
+    username: ${npe.prod-datasource.username}
+    password: ${npe.prod-datasource.password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+springfox:
+  documentation:
+    swagger-ui:
+      enabled: false
+    # vm option 中指定打包参数
+    # -Dspring.profiles.action=prod
+    # 但这样打出的包并不会覆盖application.yaml中的profile的配置。
+#npe:
+#  resources:
+#    article-img-path: /home/npe-resources/upload/article/img/
+#    journey-img-path: /home/npe-resources/upload/journey/img/
+#    attach-path: /home/npe-resources/upload/attach/
+#    log-path: /home/npe-resources/log/
+npe:
+  resources:
+    article-img-path: ${npe.prod-static-resources.article-img-path}
+    journey-img-path: ${npe.prod-static-resources.journey-img-path}
+    attach-path: ${npe.prod-static-resources.attach-path}
+    log-path: ${npe.prod-static-resources.log-path}
+# 自定义日志路径
+#logback:
+#  logDir: /home/npe-resources/log/
+#  appName: npe-prod
+logback:
+  logDir:  /usr/libexec/tomcat9/webapps/npe-resources/log/
+  appName: npe-prod

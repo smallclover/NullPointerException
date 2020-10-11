@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smallclover.nullpointerexception.mapper.ArticleMapper">
+    <!--parameterMap 在这会报错 Mybatis中Parameter Maps collection does not contain value for xxx-->
+    <insert id="insertArticle" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.smallclover.nullpointerexception.model.Article">
+        INSERT INTO article (
+                             title,
+                             `desc`,
+                             md_content,
+                             html_content,
+                             content_view,
+                             create_time,
+                             comment,
+                             status,
+                             publish,
+                             delete_flag)
+        VALUES (
+                #{title},
+                #{desc},
+                #{mdContent},
+                #{htmlContent},
+                #{contentView},
+                #{createTime},
+                #{comment},
+                #{status},
+                #{publish},
+                #{deleteFlag}
+               )
+    </insert>
+    <!-- 注解里定义的resultMap引用，否则无法转换 -->
+    <select id="getArticlesByIds" resultType="com.smallclover.nullpointerexception.model.Article" resultMap="article">
+        SELECT
+            *
+        FROM
+            article
+        WHERE
+            id IN 
+        <foreach collection="list" item="articleId" index="index"
+            open="(" separator="," close=")">
+            #{articleId}
+        </foreach>
+    </select>
+</mapper>

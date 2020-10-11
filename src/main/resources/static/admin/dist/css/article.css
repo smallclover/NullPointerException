@@ -1,0 +1,76 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+/* 设置body整体样式 */
+body {
+    background-image: url("../img/bg.png");
+    font: 14px/1.5 微软雅黑, arial, sans-serif;
+    width: 100%;
+    overflow: scroll;
+}
+/* 设置最外层容器格式 */
+.container-self {
+    position: relative;
+    max-width: 95%;
+    margin: 0 auto;
+}
+/* 设置文章容器的格式 */
+.article {
+    box-shadow: 5px 5px 25px #dadada;/*给元素添加阴影*/
+    position: relative;
+    padding: 0 20px;
+    margin: 40px auto;
+    max-width: 950px;
+    background: #fff;
+    text-align: center;
+}
+.comment-self {
+    box-shadow: 5px 5px 25px #dadada;/*给元素添加阴影*/
+    position: relative;
+    padding: 20px 20px 20px 20px;
+    margin: 40px auto;
+    max-width: 950px;
+    background: #fff;
+}
+/* >(子元素选择器)作用于元素的第一代后代，空格(后代选择器)作用于元素的所有后代 */
+/* 设置文章创建时间 */
+.article>time {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-bottom: 1px solid #ccc;
+    font-size: 14px;
+    padding: 4px 5px 0;
+    color: #999;
+}
+/* 设置文章标题 */
+.article>h2 {
+    padding: 35px 0 45px;
+    font-size: 22px;
+    font-weight: 700;
+    cursor: pointer;
+}
+/* 设置文章描述*/
+.article section {
+    text-align: left;
+    padding: 10px;
+    font-size: 16px;
+}
+.article blockquote {
+    padding: 0 15px;
+    color: #777;
+    border-left: 4px solid #ddd;
+}
+/*--------------*/
+
+/* 设置文章列表页面的阅读全文按钮 */
+.article footer a {
+    color: black;
+    /*transition: all .5s;*/ /* 渐进效果 */
+}
+/* 设置footer标签和article标签容器之间的padding*/
+.article footer {
+    padding: 25px 0 20px;
+}
+/*--------------------------*/

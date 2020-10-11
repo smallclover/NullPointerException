@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:with="title='开发日志管理', active='develop-log-manager'"
+      xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>NPE Admin | Develop-Log Manager</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <th:block th:replace="/admin/common/_common_css::common_css">
+        <!--/* css */-->
+    </th:block>
+</head>
+<body class="hold-transition sidebar-mini">
+<!-- Site wrapper -->
+<div class="wrapper">
+    <th:block th:replace="/admin/common/_navbar::navbar(${active})">
+        <!--/* 导航条 */-->
+    </th:block>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>[[${title}]]</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">首页</a></li>
+                            <li class="breadcrumb-item active">[[${title}]]</li>
+                        </ol>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+
+            <!-- Default box -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">[[${title}]]</h3>
+                </div>
+                <div class="card-body p-0">
+                    <!--/* table-sm 控制table的最小宽度，否则整个table会变形 */-->
+                    <table class="table table-striped projects table-sm">
+                        <thead>
+                        <tr>
+                            <th style="width: 1%">
+                                #
+                            </th>
+                            <th style="width: 20%">
+                                日志内容
+                            </th>
+                            <th style="width: 10%" class="text-center">
+                                创建时间
+                            </th>
+                            <th class="text-center">
+                                类型
+                            </th>
+                            <th class="text-center">
+                                创建人
+                            </th>
+                            <th style="width: 20%" class="text-center">
+                                操作
+                            </th>
+                            <th>
+                                待定
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <th:block th:each="developLog: ${developLogs}">
+                            <tr>
+                                <td>
+                                    #
+                                </td>
+                                <td>
+                                    <a href="#">
+                                        [[${developLog.content}]]
+                                    </a>
+                                </td>
+                                <td>
+                                    [[${developLog.createTime}]]
+                                </td>
+                                <td class="text-center">
+                                    [[${developLog.bugType}]]
+                                </td>
+                                <td class="text-center">
+                                    [[${developLog.author}]]
+                                </td>
+                                <td class="project-actions text-center">
+                                    <a class="btn btn-info btn-sm" href="#">
+                                        <i class="fas fa-pencil-alt">
+                                        </i>
+                                        编辑
+                                    </a>
+                                    <a class="btn btn-danger btn-sm" href="#">
+                                        <i class="fas fa-trash">
+                                        </i>
+                                        删除
+                                    </a>
+                                </td>
+                                <td>
+                                    待定
+                                </td>
+                            </tr>
+                        </th:block>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.card-body -->
+                <!--分页-->
+                <div th:replace="/admin/common/_pagination::pageAdminNav(${pageInfo})"></div>
+            </div>
+            <!-- /.card -->
+
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    <!-- Main Footer -->
+    <footer th:replace="/admin/common/_footer::footer">
+        <!--页脚-->
+    </footer>
+
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+        <!-- Control sidebar content goes here -->
+    </aside>
+    <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+
+<!--/* js */-->
+<th:block th:replace="/admin/common/_common_js::common_js">
+    <!--/* replace的引用目录必须从根目录开始 */-->
+</th:block>
+</body>
+</html>

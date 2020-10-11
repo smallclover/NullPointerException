@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" th:with="title='归档', top_poster='往昔'
+, bottom_content='人生天地之间，若白驹之过隙，忽然而已'">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>[[${title}]]</title>
+    <th:block th:replace="/blog/common/_common_css::common_css">
+
+    </th:block>
+    <link rel="stylesheet" th:href="@{/blog/css/reset.css}">
+    <link rel="stylesheet" th:href="@{/blog/css/archive.css}">
+</head>
+
+<body>
+
+<th:block th:replace="/blog/common/_head::navbar">
+
+</th:block>
+<th:block th:replace="/blog/common/_poster::navbar(${top_poster}, ${bottom_content})">
+
+</th:block>
+<ul class="timeline">
+    <li class="timeline-event" th:each="article: ${articles}">
+        <label class="timeline-event-icon"></label>
+        <div class="timeline-event-copy">
+            <p class="timeline-event-thumbnail">[[${article.createTime}]]</p>
+            <h3>[[${article.title}]]</h3>
+            [[${article.desc}]]<br>
+            <p><strong><a th:href="@{'/blog/article/detail/' + ${article.id}}">继续阅读</a></strong>
+        </div>
+    </li>
+</ul>
+
+<th:block th:replace="/blog/common/_footer::footer">
+
+</th:block>
+
+<th:block th:replace="/blog/common/_common_js::common_js">
+
+</th:block>
+</body>
+</html>

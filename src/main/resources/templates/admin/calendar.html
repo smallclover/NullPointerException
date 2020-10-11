@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:with="title='日历', active='calendar'"
+      xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <title>NPE Admin | Calendar</title>
+    <th:block th:replace="/admin/common/_common_css::common_css">
+        <!--/* css */-->
+    </th:block>
+    <!-- fullCalendar -->
+    <link rel="stylesheet" th:href="@{/admin/plugins/fullcalendar/main.min.css}">
+    <link rel="stylesheet" th:href="@{/admin/plugins/fullcalendar-daygrid/main.min.css}">
+    <link rel="stylesheet" th:href="@{/admin/plugins/fullcalendar-timegrid/main.min.css}">
+    <link rel="stylesheet" th:href="@{/admin/plugins/fullcalendar-bootstrap/main.min.css}">
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+    <th:block th:replace="/admin/common/_navbar::navbar(${active})">
+        <!--/* 导航条 */-->
+    </th:block>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>日历</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">首页</a></li>
+                            <li class="breadcrumb-item active">日历</li>
+                        </ol>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="sticky-top mb-3">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title">可拖动事件</h4>
+                                </div>
+                                <div class="card-body">
+                                    <!-- the events -->
+                                    <div id="external-events">
+                                        <div class="external-event bg-success">午饭</div>
+                                        <div class="external-event bg-warning">回家</div>
+                                        <div class="external-event bg-info">工作</div>
+                                        <div class="external-event bg-primary">代码测试</div>
+                                        <div class="external-event bg-danger">睡觉</div>
+                                        <div class="checkbox">
+                                            <label for="drop-remove">
+                                                <input type="checkbox" id="drop-remove">
+                                                拖拽后移除
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                            <!-- /.card -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">创建事件</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="btn-group" style="width: 100%; margin-bottom: 10px;">
+                                        <!--<button type="button" id="color-chooser-btn" class="btn btn-info btn-block dropdown-toggle" data-toggle="dropdown">Color <span class="caret"></span></button>-->
+                                        <ul class="fc-color-picker" id="color-chooser">
+                                            <li><a class="text-primary" href="#"><i class="fas fa-square"></i></a></li>
+                                            <li><a class="text-warning" href="#"><i class="fas fa-square"></i></a></li>
+                                            <li><a class="text-success" href="#"><i class="fas fa-square"></i></a></li>
+                                            <li><a class="text-danger" href="#"><i class="fas fa-square"></i></a></li>
+                                            <li><a class="text-muted" href="#"><i class="fas fa-square"></i></a></li>
+                                        </ul>
+                                    </div>
+                                    <!-- /btn-group -->
+                                    <div class="input-group">
+                                        <input id="new-event" type="text" class="form-control" placeholder="事件标题">
+
+                                        <div class="input-group-append">
+                                            <button id="add-new-event" type="button" class="btn btn-primary">添加</button>
+                                        </div>
+                                        <!-- /btn-group -->
+                                    </div>
+                                    <!-- /input-group -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-md-9">
+                        <div class="card card-primary">
+                            <div class="card-body p-0">
+                                <!-- THE CALENDAR -->
+                                <div id="calendar"></div>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    <!-- Main Footer -->
+    <footer th:replace="/admin/common/_footer::footer">
+        <!--页脚-->
+    </footer>
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+        <!-- Control sidebar content goes here -->
+    </aside>
+    <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+
+<!--/* js */-->
+<th:block th:replace="/admin/common/_common_js::common_js">
+    <!--/* replace的引用目录必须从根目录开始 */-->
+</th:block>
+<!-- fullCalendar 2.2.5 -->
+<script th:src="@{/admin/plugins/moment/moment.min.js}"></script>
+<script th:src="@{/admin/plugins/fullcalendar/main.min.js}"></script>
+<script th:src="@{/admin/plugins/fullcalendar-daygrid/main.min.js}"></script>
+<script th:src="@{/admin/plugins/fullcalendar-timegrid/main.min.js}"></script>
+<script th:src="@{/admin/plugins/fullcalendar-interaction/main.min.js}"></script>
+<script th:src="@{/admin/plugins/fullcalendar-bootstrap/main.min.js}"></script>
+<!--设置中文时需要引用的js文件-->
+<script th:src="@{/admin/plugins/fullcalendar/locales/zh-cn.js}"></script>
+<!-- Page specific script -->
+<script>
+    $(function () {
+
+        /* initialize the external events
+         -----------------------------------------------------------------*/
+        function ini_events(ele) {
+            ele.each(function () {
+
+                // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
+                // it doesn't need to have a start or end
+                var eventObject = {
+                    title: $.trim($(this).text()) // use the element's text as the event title
+                }
+
+                // store the Event Object in the DOM element so we can get to it later
+                $(this).data('eventObject', eventObject)
+
+                // make the event draggable using jQuery UI
+                $(this).draggable({
+                    zIndex        : 1070,
+                    revert        : true, // will cause the event to go back to its
+                    revertDuration: 0  //  original position after the drag
+                })
+
+            })
+        }
+
+        ini_events($('#external-events div.external-event'))
+
+        /* initialize the calendar
+         -----------------------------------------------------------------*/
+        //Date for the calendar events (dummy data)
+        var date = new Date()
+        var d    = date.getDate(),
+            m    = date.getMonth(),
+            y    = date.getFullYear()
+
+        var Calendar = FullCalendar.Calendar;
+        var Draggable = FullCalendarInteraction.Draggable;
+
+        var containerEl = document.getElementById('external-events');
+        var checkbox = document.getElementById('drop-remove');
+        var calendarEl = document.getElementById('calendar');
+
+        // initialize the external events
+        // -----------------------------------------------------------------
+
+        new Draggable(containerEl, {
+            itemSelector: '.external-event',
+            eventData: function(eventEl) {
+                console.log(eventEl);
+                return {
+                    title: eventEl.innerText,
+                    backgroundColor: window.getComputedStyle( eventEl ,null).getPropertyValue('background-color'),
+                    borderColor: window.getComputedStyle( eventEl ,null).getPropertyValue('background-color'),
+                    textColor: window.getComputedStyle( eventEl ,null).getPropertyValue('color'),
+                };
+            }
+        });
+
+        var calendar = new Calendar(calendarEl, {
+            plugins: [ 'bootstrap', 'interaction', 'dayGrid', 'timeGrid' ],
+            header    : {
+                left  : 'prev,next today',
+                center: 'title',
+                right : 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            locale:'zh-cn',//设置中文
+            //Random default events
+            events    : [
+                {
+                    title          : 'All Day Event',
+                    start          : new Date(y, m, 1),
+                    backgroundColor: '#f56954', //red
+                    borderColor    : '#f56954', //red
+                    allDay         : true
+                },
+                {
+                    title          : 'Long Event',
+                    start          : new Date(y, m, d - 5),
+                    end            : new Date(y, m, d - 2),
+                    backgroundColor: '#f39c12', //yellow
+                    borderColor    : '#f39c12' //yellow
+                }
+            ],
+            editable  : true,
+            droppable : true, // this allows things to be dropped onto the calendar !!!
+            drop      : function(info) {
+                // is the "remove after drop" checkbox checked?
+                if (checkbox.checked) {
+                    // if so, remove the element from the "Draggable Events" list
+                    info.draggedEl.parentNode.removeChild(info.draggedEl);
+                }
+            }
+        });
+
+        calendar.render();
+        // $('#calendar').fullCalendar()
+
+        /* ADDING EVENTS */
+        var currColor = '#3c8dbc' //Red by default
+        //Color chooser button
+        var colorChooser = $('#color-chooser-btn')
+        $('#color-chooser > li > a').click(function (e) {
+            e.preventDefault()
+            //Save color
+            currColor = $(this).css('color')
+            //Add color effect to button
+            $('#add-new-event').css({
+                'background-color': currColor,
+                'border-color'    : currColor
+            })
+        })
+        $('#add-new-event').click(function (e) {
+            e.preventDefault()
+            //Get value and make sure it is not null
+            var val = $('#new-event').val()
+            if (val.length == 0) {
+                return
+            }
+
+            //Create events
+            var event = $('<div />')
+            event.css({
+                'background-color': currColor,
+                'border-color'    : currColor,
+                'color'           : '#fff'
+            }).addClass('external-event')
+            event.html(val)
+            $('#external-events').prepend(event)
+
+            //Add draggable funtionality
+            ini_events(event)
+
+            //Remove event from text input
+            $('#new-event').val('')
+        })
+    })
+</script>
+</body>
+</html>

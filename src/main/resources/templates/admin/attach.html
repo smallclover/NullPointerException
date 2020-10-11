@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:with="title='文件', active='attach'"
+      xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <title>NPE Admin | File</title>
+    <th:block th:replace="/admin/common/_common_css::common_css">
+        <!--/* css */-->
+    </th:block>
+    <!-- fullCalendar -->
+    <link rel="stylesheet" th:href="@{/admin/plugins/fullcalendar/main.min.css}">
+    <link rel="stylesheet" th:href="@{/admin/plugins/fullcalendar-daygrid/main.min.css}">
+    <link rel="stylesheet" th:href="@{/admin/plugins/fullcalendar-timegrid/main.min.css}">
+    <link rel="stylesheet" th:href="@{/admin/plugins/fullcalendar-bootstrap/main.min.css}">
+    <!-- dropzone -->
+    <link rel="stylesheet" th:href="@{/admin/plugins/dropzone/dropzone.min.css}">
+<!--    <link rel="stylesheet" th:href="@{/admin/plugins/dropzone/basic.min.css}">-->
+    <link rel="stylesheet" th:href="@{/admin/dist/css/attach/attach.css}">
+</head>
+<body class="hold-transition sidebar-mini">
+<!-- Site wrapper -->
+<div class="wrapper">
+    <th:block th:replace="/admin/common/_navbar::navbar(${active})">
+        <!--/* 导航条 */-->
+    </th:block>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>附件管理</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">首页</a></li>
+                            <li class="breadcrumb-item active">附件管理</li>
+                        </ol>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">附件管理</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <form action="#" class="dropzone" id="uploadForm">
+                        <div class="dz-message">
+                            将文件 拖拽至此处/点击 完成上传
+                        </div>
+                    </form>
+                </div>
+                <!-- /.card-body -->
+                <div class="card-footer text-center">
+                    <input id="uploadButton" class="btn btn-outline-primary" type="button" value="点击上传">
+                </div>
+                <!-- /.card-footer -->
+            </div>
+            <!-- /.card -->
+            <div th:if="${attachList.isEmpty()}" class="alert alert-default-warning col-md-6 text-center m-auto">
+                <h5><i class="icon fas fa-exclamation-triangle"></i> 提示</h5>
+                目前还没有附件
+            </div>
+            <div class="row">
+                <th:block th:unless="${attachList.isEmpty()}">
+                    <th:block th:each="attach:${attachList}">
+                        <div class="col-md-2 text-center " >
+                            <img class="img-thumbnail"
+                                 th:src="@{${attach.fileType == 'img'}?${attach.storagePath}: '/admin/dist/img/attach.png'}"
+                                 th:alt="${attach.name}" />
+                            <div class="clearfix">
+                                <span th:text="${attach.storagePath}"></span>
+                            </div>
+                            <div class="clearfix">
+                                <button type="button" class="btn btn-warning btn-sm">
+                                    <i class="fa fa-copy"></i> <span>复制</span>
+                                </button>
+                                <button type="button" class="btn btn-danger btn-sm">
+                                    <i class="fa fa-trash"></i> <span>删除</span>
+                                </button>
+                            </div>
+                        </div>
+                    </th:block>
+                </th:block>
+            </div>
+            <!--分页-->
+            <div th:replace="/admin/common/_pagination::pageAdminNav(${pageInfo})"></div>
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    <!-- Main Footer -->
+    <footer th:replace="/admin/common/_footer::footer">
+        <!--页脚-->
+    </footer>
+
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+        <!-- Control sidebar content goes here -->
+    </aside>
+    <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+<!--/* js */-->
+<th:block th:replace="/admin/common/_common_js::common_js">
+    <!--/* replace的引用目录必须从根目录开始 */-->
+</th:block>
+<!-- dropzone -->
+<script th:src="@{/admin/plugins/dropzone/dropzone.min.js}"></script>
+
+<script type="text/javascript" th:inline="javascript">
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000
+    });
+    Dropzone.options.uploadForm = {
+        url: /*[[@{/admin/attach/upload}]]*/"",
+        paramName: function (n) {
+            return "files[]";
+        },
+        maxFilesize: 10, //MB
+        uploadMultiple: true,
+        parallelUploads: 10, // 一次可以上传多少个文件
+        autoProcessQueue: false, // 关闭自动上传
+        addRemoveLinks: true,
+        dictRemoveFile: "移除", // 当adRemoveLinks为true的时候
+        init: function () {
+            var submitButton = document.querySelector("#uploadButton");
+            uloadform_zone = this;
+            submitButton.addEventListener("click", function () {
+                uloadform_zone.processQueue();
+            });
+            this.on("complete", function (file) {
+                uloadform_zone.removeFile(file);
+            });
+            this.on("success", function () {
+                Toast.fire({
+                    type: 'success',
+                    title: ' 插入成功 '
+                });
+            });
+        }
+    };
+
+</script>
+</body>
+</html>

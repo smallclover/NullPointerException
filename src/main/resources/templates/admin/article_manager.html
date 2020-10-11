@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:with="title='文章管理', active='article-manager'"
+      xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>NPE Admin | Article Manager</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <th:block th:replace="/admin/common/_common_css::common_css">
+        <!--/* css */-->
+    </th:block>
+</head>
+<body class="hold-transition sidebar-mini">
+<!-- Site wrapper -->
+<div class="wrapper">
+    <th:block th:replace="/admin/common/_navbar::navbar(${active})">
+        <!--/* 导航条 */-->
+    </th:block>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>[[${title}]]</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">首页</a></li>
+                            <li class="breadcrumb-item active">[[${title}]]</li>
+                        </ol>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+
+            <!-- Default box -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">[[${title}]]</h3>
+                </div>
+                <div class="card-body p-0">
+                    <!--/* table-sm 控制table的最小宽度，否则整个table会变形 */-->
+                    <table class="table table-striped projects table-sm">
+                        <thead>
+                        <tr>
+                            <th style="width: 1%">
+                                #
+                            </th>
+                            <th style="width: 10%">
+                                文章标题
+                            </th>
+                            <th style="width: 10%">
+                                发布时间
+                            </th>
+                            <th style="width: 8%" class="text-center">
+                                状态
+                            </th>
+                            <th style="width: 8%" class="text-center">
+                                是否发布
+                            </th>
+                            <th style="width: 8%"  class="text-center">
+                                浏览量
+                            </th>
+                            <th style="width: 8%"  class="text-center">
+                                分类
+                            </th>
+                            <th style="width: 20%">
+                                操作
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <th:block th:each="article: ${articles}">
+                            <tr th:unless="${article.deleteFlag}">
+                                <td>
+                                    #
+                                </td>
+                                <td>
+                                    <a th:href="@{'/blog/article/detail/' + ${article.id}}">
+                                        [[${article.title}]]
+                                    </a>
+                                </td>
+                                <td>
+                                    [[${article.createTime}]]
+                                </td>
+                                <td class="project-state text-center">
+                                    <th:block th:unless="${article.status}">
+                                        <span class="badge badge-success">正文</span>
+                                    </th:block>
+                                    <th:block th:if="${article.status}">
+                                        <span class="badge badge-warning">草稿</span>
+                                    </th:block>
+                                </td>
+                                <td class="project-state text-center">
+                                    <th:block th:if="${article.publish}">
+                                        <span class="badge badge-success">已发布</span>
+                                    </th:block>
+                                    <th:block th:unless="${article.publish}">
+                                        <span class="badge badge-secondary">未发布</span>
+                                    </th:block>
+                                </td>
+                                <td class="text-center">
+                                    <!--/* 双层嵌套 */-->
+<!--                                    <span th:text="${articleMap['__${article.id}__']}"></span>-->
+                                    <span th:text="${article.contentView}"></span>
+                                </td>
+                                <td class="text-center">
+                                    [[${article.category}]]
+                                </td>
+                                <td class="project-actions">
+                                    <a class="btn btn-primary btn-sm" href = "javascript:void(0);"
+                                       th:onclick="publishArticle([[${article.id}]],[[${article.title}]], [[${article.publish}]])">
+                                        <i class="fas fa-folder">
+                                        </i>
+                                        发布
+                                    </a>
+                                    <a class="btn btn-info btn-sm" th:href="@{'/admin/article/manager/edit/' + ${article.id}}">
+                                        <i class="fas fa-pencil-alt">
+                                        </i>
+                                        编辑
+                                    </a>
+                                    <!--
+                                    这个是很多网站最常用的方法，也是最周全的方法，onclick负责执行js函数，
+                                    而void是一个操作符，void(0)返回undefined,地址不发生跳转，
+                                    且这种方法不会像第一种方法一样直接将js方法暴露在浏览器的状态栏。
+                                    -->
+                                    <!--
+                                        thymleaf 标签中使用函数传参数
+                                    -->
+                                    <a class="btn btn-danger btn-sm" href = "javascript:void(0);" th:onclick ="deleteArticle([[${article.id}]],[[${article.title}]])">
+                                        <i class="fas fa-trash">
+                                        </i>
+                                        删除
+                                    </a>
+                                </td>
+                            </tr>
+                        </th:block>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.card-body -->
+                <!--分页-->
+                <div th:replace="/admin/common/_pagination::pageAdminNav(${pageInfo})"></div>
+            </div>
+            <!-- /.card -->
+
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    <!-- Main Footer -->
+    <footer th:replace="/admin/common/_footer::footer">
+        <!--页脚-->
+    </footer>
+
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+        <!-- Control sidebar content goes here -->
+    </aside>
+    <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+
+<!--/* js */-->
+<th:block th:replace="/admin/common/_common_js::common_js">
+    <!--/* replace的引用目录必须从根目录开始 */-->
+</th:block>
+
+<script type="text/javascript" th:inline="javascript">
+    function deleteArticle(articleId, articleTitle) {
+        Swal.fire({
+            title: '删除',
+            text: "是否确定删除文章:" + "[" + articleTitle + "]",
+            icon: 'warning',
+            showCancelButton: true,
+            cancelButtonText:'取消',
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '删除'
+        }).then((result) => {
+
+            if (result.value) {
+
+                $.ajax({
+                    url: /*[[@{/admin/article/manager/delete}]]*/"",
+                    data: {
+                        articleId: articleId,
+                    },
+                    type: "POST",
+                    dataType: "json",
+                    success: function(data) {
+                        console.log(data);
+                        if (data.code !== 200){
+                            console.log("error");
+                            Swal.fire(
+                                "文章:" + "[" + articleTitle + "]" + '删除失败!',
+                                '文件删除失败',
+                                'error'
+                            )
+                        }else{
+                            Swal.fire(
+                                "文章:" + "[" + articleTitle + "]" + '被删除!',
+                                '文件已经删除成功',
+                                'success'
+                            )
+                        }
+                    },
+                    // error: function (data) {
+                    //     console.log("error");
+                    //     Swal.fire(
+                    //         "文章:" + "[" + articleTitle + "]" + '删除失败!',
+                    //         '文件删除失败',
+                    //         'error'
+                    //     )
+                    // }
+                });
+            }
+        })
+
+    }
+
+
+    function publishArticle(articleId, articleTitle, articlePublsih) {
+        if (articlePublsih === true){
+            Swal.fire({
+                icon: 'error',
+                title: '已发布',
+                text: '该文章已发布！'
+            })
+        }else{
+            Swal.fire({
+                title: '发布',
+                text: "是否确定发布文章:" + "[" + articleTitle + "]",
+                icon: 'warning',
+                showCancelButton: true,
+                cancelButtonText:'取消',
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: '发布'
+            }).then((result) => {
+                if (result.value) {
+
+                    $.ajax({
+                        url: /*[[@{/admin/article/manager/publish}]]*/"",
+                        data: {
+                            articleId: articleId,
+                        },
+                        type: "POST",
+                        dataType: "text",
+                        success: function(data) {
+                            console.log("success");
+                            Swal.fire(
+                                "文章:" + "[" + articleTitle + "]" + '被发布!',
+                                '文件已经发布成功',
+                                'success'
+                            )
+                            window.location.reload();
+                        },
+                        error: function (data) {
+                            console.log("error");
+                            Swal.fire(
+                                "文章:" + "[" + articleTitle + "]" + '发布失败!',
+                                '文件发布失败',
+                                'error'
+                            )
+                        }
+                    });
+                }
+            })
+        }
+    }
+</script>
+</body>
+</html>

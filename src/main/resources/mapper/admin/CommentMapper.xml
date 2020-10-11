@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smallclover.nullpointerexception.mapper.CommentMapper">
+    <!--parameterMap 在这会报错 Mybatis中Parameter Maps collection does not contain value for xxx-->
+    <insert id="insertComment" useGeneratedKeys="true" keyProperty="id, userId"
+            parameterType="com.smallclover.nullpointerexception.model.Comment">
+        INSERT INTO comment(content,
+                            article_id,
+                            pass_audit,
+                            nickname,
+                            email,
+                            comment_parent_id,
+                            reply_user_id,
+                            reply_user_nickname,
+                            user_id,
+                            create_time,
+                            delete_flag)
+        VALUES (
+                   #{content},
+                   #{articleId},
+                   #{passAudit},
+                   #{nickname},
+                   #{email},
+                   #{commentParentId},
+                   #{replyUserId},
+                   #{replyUserNickname},
+                   #{userId},
+                   #{createTime},
+                   #{deleteFlag}
+               );
+    </insert>
+</mapper>

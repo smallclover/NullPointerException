@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:with="title='发布文章', active='article-publish'">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <title>NPE Admin | article-publish</title>
+    <th:block th:replace="/admin/common/_common_css::common_css">
+        <!--/* css */-->
+    </th:block>
+    <link rel="stylesheet" th:href="@{/admin/plugins/editormd/css/editormd.css}">
+    <link rel="stylesheet" th:href="@{/admin/plugins/bootstrap-toggle/css/bootstrap-toggle.min.css}">
+    <link rel="stylesheet" th:href="@{/admin/plugins/tagsinput/tagsinput.css}">
+    <style>
+        /*使标签之间有2px的空隙*/
+        .bootstrap-tagsinput .badge{
+            margin: 2px 2px;
+        }
+        .bootstrap-tagsinput{
+            line-height: 27px;
+        }
+    </style>
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+    <th:block th:replace="/admin/common/_navbar::navbar(${active})">
+        <!--/* 导航条 */-->
+    </th:block>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>发布文章</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">首页</a></li>
+                            <li class="breadcrumb-item active">发布文章</li>
+                        </ol>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">发布文章</h3>
+                    </div>
+                    <form action="/admin/article/add/do" method="post">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input id="title" type="text" class="form-control" placeholder="请输入文章标题（必须）" name="title"
+                                               required="required"
+                                               aria-required="true"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <select id="category" class="form-control" style="width: 100%;">
+                                            <div th:each="category: ${categorys}">
+                                                <option>[[${category.categoryName}]]</option>
+                                            </div>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input  id="desc" type="text" class="form-control" placeholder="请输入文章描述（必须）" name="desc"
+                                               required="required"
+                                               aria-required="true"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input id="input_tags" type="text" data-role="tagsinput" placeholder="请填写文章标签">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div id="editor">
+                                    <textarea id="editor-md-doc" name="editor-markdown-doc" style="display:none;"
+                                        th:utext="${updateArticle ne null and updateArticle.mdContent ne null}?${updateArticle.mdContent}:''">
+
+                                    </textarea>
+                                    <!-- 注意：name属性的值-->
+                                    <!-- 这里id或者name都是以div的id为前缀-->
+                                    <!-- 第二个隐藏文本域，用来构造生成的HTML代码，方便表单POST提交，这里的name可以任意取，后台接受时以这个name键为准 -->
+                                    <!--                <textarea id="editor-md-html" name="editor-html-code" style="display:none;"></textarea>-->
+                                </div>
+                            </div>
+                            <div class="form-group col-md-3 col-sm-4">
+                                <label class="col-sm-4">允许评论</label>
+                                <input id="toggle-event-comment" type="checkbox" checked data-toggle="toggle" data-onstyle="success" data-size="mini">
+                            </div>
+                            <div class="form-group col-md-3 col-sm-4">
+                                <label class="col-sm-4">是否发布</label>
+                                <input id="toggle-event-publish" type="checkbox" checked data-toggle="toggle" data-onstyle="success" data-size="mini" >
+                            </div>
+                            <div class="text-right">
+                                <a class="btn btn-default waves-effect waves-light" th:href="@{/admin/article/manager}">
+                                    返回列表
+                                </a>
+                                <button id="submit" type="button" class="btn btn-success waves-effect waves-light">
+                                    保存文章
+                                </button>
+                                <button id="save" type="button" class="btn btn-warning waves-effect waves-light">
+                                    存为草稿
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+        </section>
+    </div>
+    <!-- /.content-wrapper -->
+    <!-- Main Footer -->
+    <footer th:replace="/admin/common/_footer::footer">
+        <!--页脚-->
+    </footer>
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+        <!-- Control sidebar content goes here -->
+    </aside>
+    <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+
+<!--/* js */-->
+<th:block th:replace="/admin/common/_common_js::common_js">
+    <!--/* replace的引用目录必须从根目录开始 */-->
+</th:block>
+<script th:src="@{/admin/plugins/editormd/js/editormd.js}"></script>
+<script th:src="@{/admin/plugins/editormd/lib/marked.min.js}"></script>
+<script th:src="@{/admin/plugins/editormd/lib/prettify.min.js}"></script>
+<script th:src="@{/admin/plugins/bootstrap-toggle/js/bootstrap-toggle.min.js}"></script>
+<script th:src="@{/admin/plugins/tagsinput/tagsinput.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+    // type 如果写错了将无法执行js
+
+    $("#submit").on("click", function () {
+        Swal.fire({
+            title: '发布',
+            text: "是否确定发布文章",
+            icon: 'warning',
+            showCancelButton: true,
+            cancelButtonText:'取消',
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '发布'
+        }).then((result) => {
+            if (result.value) {
+                submitArticle("submit");
+            }
+        })
+    });
+    // 是否开启评论
+    let toggleComment = true;
+    // 是否开启ping
+    let togglePublish = true;
+    $(function() {
+        $('#toggle-event-comment').change(function() {
+            toggleComment = $(this).prop('checked');
+        })
+        $('#toggle-event-publish').change(function() {
+            togglePublish = $(this).prop('checked');
+        })
+    })
+    let tags = undefined;
+    $('input').on('itemAdded', function(event) {
+        tags = $('#input_tags').val();
+        // class 名为bootstrap-tagsinput的div下的所有input标签的placeholder属性清空
+        $('div.bootstrap-tagsinput input').attr("placeholder","");
+    });
+
+    $('input').on('itemRemoved', function(event) {
+        tags = $('#input_tags').val();
+    });
+
+    // 获取默认值
+    let selectorCategory = $('#category');
+    let category = selectorCategory.find("option:selected").text();
+    selectorCategory.change(function(){
+        console.log("选中的值为：" + $(this).val());
+        category = $(this).val()
+    });
+
+    // 提交文章内容
+    function submitArticle(type) {
+
+        let status = undefined;
+        if (type === "submit"){
+            status = false;
+        }else{
+            status = true;
+        }
+
+        let title = $("#title").val();
+        let desc = $("#desc").val();
+        let htmlContent = testEditor.getPreviewedHTML();
+        let markdownContent = testEditor.getMarkdown();
+        // let htmlContent = $("textarea[name='editor-html-code']").val();
+        //let markdownContent = $("#editor-md-doc").val();
+        $.ajax({
+            url: /*[[@{/admin/article/add/content}]]*/ "url",
+            data: JSON.stringify({
+                title: title,
+                htmlContent: htmlContent,
+                mdContent: markdownContent,
+                desc:desc,
+                comment:toggleComment,
+                publish:togglePublish,
+                tags:tags,
+                category:category,
+                status:status
+            }),
+            type: "POST",
+            contentType: "application/json",
+            success: function (data) {
+                console.log("success");
+                Swal.fire(
+                    "文章:" + "[" + title + "]" + '已发布!',
+                    '文章发布成功',
+                    'success'
+                )
+                window.location.href="/admin/article/manager/";
+            },
+            error: function (data) {
+                console.log(data);
+                Swal.fire(
+                    "文章:" + "[" + title + "]" + '未发布!',
+                    '文章发布失败',
+                    'error'
+                )
+            }
+        })
+    }
+</script>
+
+<script type="text/javascript" th:inline="javascript">
+    var testEditor;
+    // 定义markdown编辑器
+    $(function() {
+        testEditor = editormd("editor", {//注意1：这里的就是上面的DIV的id属性值
+            placeholder: "markdown编辑器，左边是编辑区域，右边是预览区域",
+            width   : "100%",
+            height  : 640,
+            syncScrolling : "single",
+            path    : /*[[@{/admin/plugins/editormd/lib/}]]*/"url",//注意2：你的路径
+            saveHTMLToTextarea : true,//注意3：这个配置，方便post提交表单
+            // editomd 编辑器 如果想要取得markdown的预览html代码，首先需要将上面的属性设置为true，
+            // 然后在后台通过自动生成的textarea的name值来取得html
+            // 自动生成的textarea是没有id的
+            imageUpload: true,
+            imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+            imageUploadURL: /*[[@{/admin/article/add/content/image}]]*/"url",
+            toolbarAutoFixed:false
+        });
+    });
+    //editor.md期望得到一个json格式的上传后的返回值，格式是这样的：
+    /*
+    {
+        success : 0 | 1,           // 0 表示上传失败，1 表示上传成功
+        message : "提示的信息，上传成功或上传失败及错误信息等。",
+        url     : "图片地址"        // 上传成功时才返回
+    }
+    */
+
+    $('#input_tags').tagsinput({
+        tagClass:function (item) {
+            return 'badge badge-primary'
+        },
+    });
+</script>
+</body>
+</html>

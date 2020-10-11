@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" th:with="title='关于', top_poster='我'
+, bottom_content='非淡泊无以明志，非宁静无以致远'">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>[[${title}]]</title>
+  <th:block th:replace="/blog/common/_common_css::common_css">
+
+  </th:block>
+
+</head>
+
+<body>
+
+<th:block th:replace="/blog/common/_head::navbar">
+
+</th:block>
+<th:block th:replace="/blog/common/_poster::navbar(${top_poster}, ${bottom_content})">
+
+</th:block>
+  <!-- Main Content -->
+  <article>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <ul>
+            <li>[[${about.desc}]]</li>
+            <li>
+              技术栈:
+              <ul th:each="tech: ${about.techStack}">
+                <li>[[${tech}]]</li>
+              </ul>
+            </li>
+            <li>
+              [[${about.address}]]
+            </li>
+            <li>
+              [[${about.favourite}]]
+            </li>
+            <li>
+              [[${about.character}]]
+            </li>
+            <li>
+              [[${about.future}]]
+            </li>
+            <li>
+             [[${about.wellKnown}]]
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <hr>
+
+<th:block th:replace="/blog/common/_footer::footer">
+
+</th:block>
+</body>
+
+<th:block th:replace="/blog/common/_common_js::common_js">
+
+</th:block>
+</html>

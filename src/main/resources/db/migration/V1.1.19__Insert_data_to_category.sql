@@ -1,0 +1,12 @@
+INSERT INTO category(category_name, update_time, create_time, delete_flag)
+VALUES('旅行', '2020-03-17 00:00:00', '2020-03-17 00:00:00', false);
+INSERT INTO category(category_name, update_time, create_time, delete_flag)
+VALUES('日常', '2020-03-17 00:00:00', '2020-03-17 00:00:00', false);
+INSERT INTO category(category_name, update_time, create_time, delete_flag)
+VALUES('吐槽', '2020-03-17 00:00:00', '2020-03-17 00:00:00', false);
+INSERT INTO category(category_name, update_time, create_time, delete_flag)
+VALUES('语言', '2020-03-17 00:00:00', '2020-03-17 00:00:00', false);
+INSERT INTO category(category_name, update_time, create_time, delete_flag)
+VALUES('其他', '2020-03-17 00:00:00', '2020-03-17 00:00:00', false);
+INSERT INTO category(category_name, update_time, create_time, delete_flag)
+VALUES('待定', '2020-03-17 00:00:00', '2020-03-17 00:00:00', false);

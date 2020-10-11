@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:with="title='文章详情', top_poster='文', bottom_content='实践是检验真理的唯一标准'">
+<head>
+    <title>[[${title}]]</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" th:href="@{/admin/plugins/editormd/css/editormd.css}">
+    <link rel="stylesheet" th:href="@{/blog/css/article.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" th:href="@{/admin/plugins/sweetalert2/sweetalert2.css}">
+    <th:block th:replace="/blog/common/_common_css::common_css">
+
+    </th:block>
+</head>
+<body>
+
+<th:block th:replace="/blog/common/_head::navbar">
+
+</th:block>
+<th:block th:replace="/blog/common/_poster::navbar(${top_poster}, ${bottom_content})">
+
+</th:block>
+<div class="container-self">
+    <article class="article">
+        <input type="hidden" id="articleId" th:value="${article.id}">
+        <time id="time1">[[${article.createTime}]]</time>
+        <h2 style="text-align: center; ">[[${article.title}]]</h2>
+        <p style="position: center" class="text-info">阅读量:
+<!--            <span th:text="${articleMap['__${article.id}__']}"></span>-->
+            <span th:text="${article.getContentView()}"></span>
+        </p>
+        <section>
+            <blockquote>
+                <p>[[${article.desc}]]</p>
+            </blockquote>
+            <p id="article_content">
+                <!--/*
+                这里不能在div里直接传递后台的html值，thymeleaf会对标签进行转义，直接将html标签当做文本来打印
+                   所以需要使用th:utext来避免转义
+                */-->
+            <div id="test-editor" th:utext="${article.htmlContent}">
+            </div>
+            </p>
+            <p style="text-align:center;color:#ccc;font-size:12px;margin-top:40px;">
+                我思
+                <br>
+                故我在
+            </p>
+            <p style="margin: 5em 0 1em;text-align: center;color: #83b8ec;font-size: .8em">
+                <span>:)</span>
+            </p>
+        </section>
+    </article>
+</div>
+<div class="container-self">
+    <div class="comment-self">
+        <div id="waypoint" class="m-margin-animated fadeIn">
+            <!--/* 评论区域列表 */-->
+            <div id="comment-container"  class="ui teal segment">
+                    <div class="ui threaded comments" style="max-width: 100%;">
+                        <h3 class="ui dividing header">评论</h3>
+                        <th:block th:each="comment : ${comments}">
+                            <div class="comment" th:if="${comment.passAudit}"  >
+                                <a class="avatar">
+                                    <!--                <img src="../static/images/avatar.png" th:src="@{${comment.avatar}}">-->
+                                    <img th:src="@{/img/avatar.png}">
+                                </a>
+                                <div class="content">
+                                    <a class="author" >
+                                        <span th:text="${comment.nickname}">小红</span>
+                                    </a>
+                                    <div class="metadata">
+                                        <span class="date" th:text="${#dates.format(comment.createTime,'yyyy-MM-dd HH:mm')}">Today at 5:42PM</span>
+                                    </div>
+                                    <div th:text="${comment.content}">
+                                        HelloWorld
+                                    </div>
+                                    <div class="actions">
+                                        <a class="reply" th:attr="data-comment-nickname=${comment.nickname}
+                                            ,data-replied-comment-id=${comment.userId}
+                                            ,data-top-comment-id=${comment.userId}"
+                                           onclick="reply(this)">回复</a>
+                                    </div>
+                                </div>
+                                <!--子集评论-->
+                                <div class="comments" th:if="${#arrays.length(comment.childComments)}>0">
+                                    <th:block  th:each="child : ${comment.childComments}">
+                                        <div class="comment" th:if="${child.passAudit}" >
+                                            <a class="avatar">
+                                                <!--                    <img src="../static/images/avatar.png" th:src="@{${reply.avatar}}">-->
+                                                <img th:src="@{/blog/img/avatar.png}">
+                                            </a>
+                                            <div class="content">
+                                                <a class="author" >
+                                                    <span th:text="${child.nickname}">小白</span>
+                                                    <span th:text="'@'+${child.replyUserNickname}" class="m-teal">@ 小红</span>
+                                                </a>
+                                                <div class="metadata">
+                                                    <span class="date" th:text="${#dates.format(child.createTime,'yyyy-MM-dd HH:mm')}">Today at 5:42PM</span>
+                                                </div>
+                                                <div th:text="${child.content}">
+                                                    HelloWorld
+                                                </div>
+                                                <div class="actions">
+                                                    <!-- data-* 全局属性 是一类被称为自定义数据属性的属性，它赋予我们在所有 HTML 元素上嵌入自定义数据属性的能力 -->
+                                                    <a class="reply" th:attr="data-replied-comment-id=${child.userId}
+                                                        ,data-comment-nickname=${child.nickname}
+                                                        ,data-top-comment-id=${child.commentParentId}"
+                                                       onclick="reply(this)">回复</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </th:block>
+                                </div>
+                            </div>
+                        </th:block>
+                </div>
+            </div>
+            <!--评论框 start-->
+            <div id="comment-form" class="ui form">
+                <div id="errMsg" class="ui error message">
+                    <div class="header"></div>
+                    <div id="errMsgList">
+                    </div>
+                </div>
+                <input type="hidden" id="parentCommentId" value="0">
+                <input type="hidden" id="repliedCommentId" value="0">
+                <input type="hidden" id="repliedCommentNickname" value="default">
+                <div class="field">
+                    <textarea name="content" placeholder="请输入评论信息..."></textarea>
+                </div>
+                <div class="fields">
+                    <div class="field m-mobile-wide m-margin-bottom-small">
+                        <div class="ui left icon input">
+                            <i class="user icon"></i>
+                            <input type="text" name="nickname" placeholder="姓名">
+                        </div>
+                    </div>
+                    <div class="field m-mobile-wide m-margin-bottom-small">
+                        <div class="ui left icon input">
+                            <i class="mail icon"></i>
+                            <input type="text" name="email" placeholder="邮箱">
+                        </div>
+                    </div>
+                    <div class="field  m-margin-bottom-small m-mobile-wide">
+                        <button id="comment-post" type="button" class="ui teal button m-mobile-wide"><i class="edit icon"></i>发布</button>
+                    </div>
+                </div>
+            </div>
+            <!--评论框 end-->
+        </div>
+    </div>
+</div>
+<th:block th:replace="/blog/common/_footer::footer">
+
+</th:block>
+
+<th:block th:replace="/blog/common/_common_js::common_js">
+
+</th:block>
+
+<!-- SweetAlert2 -->
+<script th:src="@{/admin/plugins/sweetalert2/sweetalert2.min.js}"></script>
+<!-- semantic -->
+<script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+
+<!-- editormd  如果加载js顺序不对汇总成editormd这个全局属性找不到 -->
+<script th:src="@{/admin/plugins/editormd/js/editormd.js}"></script>
+<script th:src="@{/admin/plugins/editormd/lib/marked.min.js}"></script>
+<script th:src="@{/admin/plugins/editormd/lib/prettify.min.js}"></script>
+<script type="text/javascript">
+    $(function () {
+        editormd.markdownToHTML("test-editor");
+    })
+</script>
+
+
+<script type="text/javascript" th:inline="javascript">
+
+    let parentCommentId = $("#parentCommentId");
+    let repliedCommentId = $("#repliedCommentId");
+    let repliedCommentNickname = $("#repliedCommentNickname");
+    let nickname = $("[name='nickname']");
+    let email = $("[name='email']");
+    let content = $("[name='content']");
+    let articleId = $("#articleId");
+    let ul = $("#errMsgList");
+    $('#comment-post').click(function () {
+        postData();
+    });
+
+    function postData() {
+
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'center',
+            showConfirmButton: false,
+            timer: 3000
+        });
+
+        let comment = {
+            commentParentId:parentCommentId.val(),
+            replyUserId:repliedCommentId.val(),
+            replyUserNickname:repliedCommentNickname.val(),
+            nickname:nickname.val(),
+            email:email.val(),
+            content:content.val(),
+            articleId:articleId.val()
+        }
+        $.ajax({
+            url: /*[[@{/blog/article/comment}]]*/"/blog/article/comment",
+            data: JSON.stringify(comment),
+            type: "POST",
+            dataType: "text",
+            contentType:"application/json",
+            success: function(data) {
+                Toast.fire({
+                    icon: 'success',
+                    title: '评论发布成功，请等待审核通过'
+                });
+                // 因为发布的评论不是实时发布，所以无需跳转，直接将内容框清理了即可
+                clearContent();
+            },
+            error: function (data) {
+
+                ul.empty()//删除被选元素的子元素。
+                let errMsg = jQuery.parseJSON(data.responseText).data;
+                $(".ui.form .error.message").show()
+
+                ul.append("<ul class='list'>");
+                for(let name in errMsg) {
+                    ul.append("<li>" + name + ":" + errMsg[name]+"</li>");
+                }
+                ul.append("</ul>");
+                Toast.fire({
+                    icon: 'error',
+                    title: '评论发布失败'
+                });
+            }
+        });
+
+    }
+
+    // 评论成功后评论框内容清空
+    function clearContent() {
+        $(".ui.form .error.message").hide()
+        ul.empty()
+        nickname.val('');
+        email.val('');
+        content.val('');
+        parentCommentId.val(0);
+        repliedCommentId.val(0);
+        repliedCommentNickname.val("");
+        content.attr("placeholder", "请输入评论信息...");
+    }
+
+    // 点击评论里的回复按钮触发
+    function reply(obj) {
+        // 被回复人的id
+        let repliedCommentId = $(obj).data('replied-comment-id');
+        // 被回复人的昵称
+        let commentNickname = $(obj).data('comment-nickname');
+
+        let parentCommentId = $(obj).data('top-comment-id');
+        // 评论内容栏里placehodler=@nickanme
+        // .focus当输入框获得焦点时，改变它的背景色
+        content.attr("placeholder", "@"+commentNickname).focus();
+        // 被回复人的id
+        $("#repliedCommentId").val(repliedCommentId);
+        // 一级评论id
+        $("#parentCommentId").val(parentCommentId);
+        $("#repliedCommentNickname").val(commentNickname);
+        // $(window).scrollTo($('#comment-form'),500);
+        // 跳转到发布评论的位置
+        $(window).scrollTop(1000);
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:with="title='开发日志', top_poster='工', bottom_content='读书破万卷，下笔如有神'">
+<head>
+    <meta charset="utf-8">
+    <!--/* 需要这一行 可以让网页的宽度自动适应手机屏幕的宽度*/-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>[[${title}]]</title>
+    <link rel="stylesheet" th:href="@{/blog/css/time.css}">
+    <th:block th:replace="/blog/common/_common_css::common_css">
+
+    </th:block>
+</head>
+<body>
+
+<th:block th:replace="/blog/common/_head::navbar">
+
+</th:block>
+<th:block th:replace="/blog/common/_poster::navbar(${top_poster}, ${bottom_content})">
+
+</th:block>
+<div class="about2">
+    <div class="wrapper clearfix-time">
+        <div class="tit">
+            <h6 class="f12">时间线</h6>
+            <h5 class="f24">发展历程</h5>
+        </div>
+        <ul class="clearfix-time" th:each="develop: ${developLogs}">
+            <li th:each="record: ${develop.content}">
+                <h4 class="f30">[[${develop.createTime}]]</h4>
+                <span class="span">[[${develop.timeAgo}]]</span>
+                <p class="f14">[[${record}]]</p>
+                <p class="f14">[[${develop.author}]]</p>
+            </li>
+        </ul>
+        <div class="future">未来</div>
+    </div>
+</div>
+<th:block th:replace="/blog/common/_footer::footer">
+
+</th:block>
+</body>
+<th:block th:replace="/blog/common/_common_js::common_js">
+
+</th:block>
+</html>

@@ -1,0 +1,11 @@
+swagger:
+  basePackage: com.smallclover.nullpointerexception.controller
+  title: 应用API说明文档
+  description: API说明文档
+  version: 1.0
+  enable: true
+  contactName: smallclover
+  contactEmail: 18363998103@163.com
+  contactUrl: https://github.com/smallclover
+  license: null
+  licenseUrl: null

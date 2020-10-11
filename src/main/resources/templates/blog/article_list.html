@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:with="title='文章列表', top_poster='卷', bottom_content='听君一席话，胜读十年书'">
+<head>
+    <title>[[${title}]]</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <th:block th:replace="/blog/common/_common_css::common_css">
+
+    </th:block>
+    <link rel="stylesheet" th:href="@{/blog/css/article.css}">
+</head>
+<body>
+
+<th:block th:replace="/blog/common/_head::navbar">
+
+</th:block>
+<th:block th:replace="/blog/common/_poster::navbar(${top_poster}, ${bottom_content})">
+
+</th:block>
+<div id="container">
+    <!-- 文章内容 -->
+    <article class="article" th:each="article: ${articles}">
+        <th:block th:if="${article.publish}">
+            <time>[[${article.createTime}]]</time>
+            <h2 class="title"><a th:href="@{'/blog/article/detail/' + ${article.id}}">[[${article.title}]]</a></h2>
+            <span><i>[[${article.tags}]]</i></span>
+            <section class="article-content markdown-body">
+                <blockquote>
+                    <p>[[${article.desc}]]</p>
+                </blockquote>
+                ......
+            </section>
+            <footer>
+                <a th:href="@{'/blog/article/detail/' + ${article.id}}" role="button" class="btn btn-outline-success btn-sm">阅读全文</a>
+            </footer>
+        </th:block>
+    </article>
+    <!-- END -->
+    <!--分页-->
+    <div th:replace="/blog/common/_pagination::pageBlogNav(${pageInfo})"></div>
+</div>
+<th:block th:replace="/blog/common/_footer::footer">
+
+</th:block>
+<th:block th:replace="/blog/common/_common_js::common_js">
+
+</th:block>
+</body>
+
+</html>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration
+        xmlns="http://ch.qos.logback/xml/ns/logback"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://ch.qos.logback/xml/ns/logback https://raw.githubusercontent.com/enricopulatzo/logback-XSD/master/src/main/xsd/logback.xsd">
+    <!--设置上下文名称-->
+    <contextName>npe</contextName>
+
+    <!--application.yml 传递参数，不使用logback 自带的<property>标签 -->
+    <springProperty scope="context" name="appname" source="logback.appName"/>
+    <springProperty scope="context" name="logdir" source="logback.logDir"/>
+
+    <!--控制台日志输出-->
+    <appender name="consoleLog" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </layout>
+    </appender>
+    <!--文件日志输出-->
+    <appender name="programExeLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--日志分割策略，按照时间来分割-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--文件路径,定义了日志的切分方式——把每一天的日志归档到一个文件中,以防止日志填满整个磁盘空间-->
+            <fileNamePattern>${logdir}/execute.${appname}.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!--只保留最近90天的日志-->
+            <maxHistory>90</maxHistory>
+            <!--用来指定日志文件的上限大小，那么到了这个值，就会删除旧的日志-->
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+        <!--日志输出编码格式化-->
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d [%thread] %-5level %logger{36} %line - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--文件日志输出-->
+    <appender name="customAccessLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--日志分割策略，按照时间来分割-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--文件路径,定义了日志的切分方式——把每一天的日志归档到一个文件中,以防止日志填满整个磁盘空间-->
+            <fileNamePattern>${logdir}/access.${appname}.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!--只保留最近90天的日志-->
+            <maxHistory>90</maxHistory>
+            <!--用来指定日志文件的上限大小，那么到了这个值，就会删除旧的日志-->
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+        <!--日志输出编码格式化-->
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d [%thread] %-5level %logger{36} %line - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+<!--    &lt;!&ndash; 测试环境+开发环境. 多个使用逗号隔开. &ndash;&gt;-->
+<!--    <springProfile name="test,dev">-->
+<!--        <logger name="com.smallclover.nullpointerexception" level="DEBUG" additivity="false">-->
+<!--            <appender-ref ref="consoleLog"/>-->
+<!--            <appender-ref ref="programExeLog"/>-->
+<!--        </logger>-->
+<!--    </springProfile>-->
+
+    <!-- 生产环境. -->
+    <springProfile name="prod">
+        <logger name="com.smallclover.nullpointerexception" level="INFO" additivity="false">
+            <appender-ref ref="consoleLog"/>
+            <appender-ref ref="programExeLog"/>
+        </logger>
+    </springProfile>
+
+    <!--用户的访客日志单独输出-->
+    <!--
+    additivity="false"设置为false之后，不会在root里再次打印
+
+    -->
+    <logger name="com.smallclover.nullpointerexception.interceptor" level="INFO" additivity="false">
+        <appender-ref ref="customAccessLog" />
+    </logger>
+
+    <!--指定日志的输出级别-->
+    <root level="DEBUG">
+        <appender-ref ref="consoleLog" />
+        <appender-ref ref="programExeLog" />
+    </root>
+</configuration>
+<!--日志配置优先级:logback-spring.xml-> 启动时 -> yml/properties-->
+<!--
+%d{HH: mm:ss.SSS}——日志输出时间
+%thread——输出日志的进程名字，这在Web应用以及异步任务处理中很有用
+%-5level——日志级别，并且使用5个字符靠左对齐
+%logger{36}——日志输出者的名字
+%msg——日志消息
+%n——平台的换行符
+
+控制台用layout
+文件用encoder
+-->

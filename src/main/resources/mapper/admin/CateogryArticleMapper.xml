@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smallclover.nullpointerexception.mapper.CategoryArticleMapper">
+
+    <resultMap id="articleTagCategory" type="com.smallclover.nullpointerexception.model.ArticleTagCategory">
+        <result property="articleId" column="article_id" />
+        <result property="tagId" column="tag_id" />
+        <result property="tagName" column="tag_name" />
+        <result property="categoryId" column="category_id" />
+        <result property="categoryName" column="category_name" />
+    </resultMap>
+
+
+    <select id="getCategoryByArticleIds" resultMap="articleTagCategory">
+        SELECT * FROM category_article ca INNER  JOIN  category cate ON ca.category_id = cate.id
+        WHERE ca.delete_flag = false AND cate.delete_flag = false
+        AND ca.article_id IN
+        <foreach collection="list" item="articleId" index="index"
+                 open="(" separator="," close=")">
+            #{articleId}
+        </foreach>
+    </select>
+    <insert id="insertCategoryArticle">
+        INSERT INTO category_article(category_id, article_id, create_time, delete_flag) VALUES
+            (#{categoryId}, #{articleId},#{createTime}, #{deleteFlag})
+    </insert>
+</mapper>

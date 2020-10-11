@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>NPE Admin | Log in</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!--/* 在使用thymeleaf的@{}标签的时候注意，如果路径前面有'/'那么最终输出的路径是相对根目录的路径 */-->
+  <!--/* 如果不加入'/'那么该路径就是相对当前请求的路径就会出现'/admin/admin/..'这个错误的路径 */-->
+  <!-- Font Awesome -->
+  <link rel="stylesheet" th:href="@{/admin/plugins/fontawesome-free/css/all.min.css}">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- icheck bootstrap -->
+  <link rel="stylesheet" th:href="@{/admin/plugins/icheck-bootstrap/icheck-bootstrap.min.css}">
+  <!-- Theme style -->
+  <link rel="stylesheet" th:href="@{/admin/dist/css/adminlte.min.css}">
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" th:href="@{/admin/plugins/sweetalert2/sweetalert2.min.css}">
+
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+</head>
+<body class="hold-transition login-page">
+<div class="login-box">
+  <div class="login-logo">
+    <a href="#"><b>NPE</b> Admin</a>
+  </div>
+  <!-- /.login-logo -->
+  <div class="card">
+    <div class="card-body login-card-body">
+      <p class="login-box-msg">登录开始你的旅程</p>
+
+      <form id="login_form" th:action="@{/admin/login/auth}" method="post">
+        <div class="input-group mb-3">
+          <input id="email" name="email" type="email" class="form-control" placeholder="邮箱地址">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-envelope"></span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          <input id="password" name="password" type="password" class="form-control" placeholder="密码">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-lock"></span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-8">
+            <div class="icheck-primary">
+              <input type="checkbox" id="remember">
+              <label for="remember">
+                记住我
+              </label>
+            </div>
+          </div>
+          <!-- /.col -->
+          <div class="col-4">
+            <button id="submit_button" type="button" class="btn btn-primary btn-block">登录</button>
+          </div>
+          <!-- /.col -->
+        </div>
+      </form>
+
+      <div class="social-auth-links text-center mb-3">
+        <p>- 或 -</p>
+        <a href="#" class="btn btn-block btn-primary">
+          <i class="fab fa-github mr-2"></i> 使用 github 登录
+        </a>
+        <a href="#" class="btn btn-block btn-danger">
+          <i class="fab fa-google mr-2"></i> 使用 Google 登录
+        </a>
+      </div>
+      <!-- /.social-auth-links -->
+
+      <p class="mb-1">
+        <a href="#">我忘记了我的密码</a>
+      </p>
+      <p class="mb-0">
+        <a href="#" class="text-center">注册一个新的账户</a>
+      </p>
+    </div>
+    <!-- /.login-card-body -->
+  </div>
+</div>
+<!-- /.login-box -->
+
+<!-- jQuery -->
+<script th:src="@{/admin/plugins/jquery/jquery.min.js}"></script>
+<!-- Bootstrap 4 -->
+<script th:src="@{/admin/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<!-- AdminLTE App -->
+<script th:src="@{/admin/dist/js/adminlte.min.js}"></script>
+<!-- SweetAlert2 -->
+<script th:src="@{/admin/plugins/sweetalert2/sweetalert2.min.js}"></script>
+
+<!--/* ajax 使用场景，并不是所有场景都合适*/-->
+<script type="text/javascript" th:inline="javascript">
+  // 监听登录按钮
+  $("#submit_button").on("click", function () {
+    login()
+  })
+
+  // 监听回车
+  $(window).keydown(function(e){
+    let curKey = e.which;
+    if(curKey == 13){
+      login()
+    }
+  })
+
+  // 校验成功提交
+  function login() {
+
+    const Toast = Swal.mixin({
+      toast: true,
+      position: 'top',
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+    });
+
+    let email = $("#email").val();
+    let password = $("#password").val();
+
+    //setTimeout("$('#submit_button').removeAttr('disabled')", 3000);// 设置三秒后显示登录按钮
+    $('#submit_button').prop('disabled', true);
+
+    $.ajax({
+      url: /*[[@{/admin/login/auth}]]*/"/admin/login/auth",
+      data: {
+        email:email,
+        password:password,
+      },
+      type: "POST",
+      dataType: "json",// 预期的服务器响应的数据类型。
+      success: function(data) {
+        $('#submit_button').removeAttr('disabled');
+        window.location.href =  /*[[@{/admin/index}]]*/"../home.html";
+      },
+      error: function (data) {
+        $('#submit_button').removeAttr('disabled');
+        let errMsg =  jQuery.parseJSON(data.responseText).message;
+        let result = ' [' + errMsg + '] ';
+        Toast.fire({
+          icon: 'error',
+          title: result,
+        });
+      }
+    });
+
+  }
+
+</script>
+
+</body>
+</html>

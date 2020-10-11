@@ -1,0 +1,29 @@
+# develop env
+spring:
+  datasource:
+    url: ${npe.dev-datasource.url}
+    username: ${npe.dev-datasource.username}
+    password: ${npe.dev-datasource.password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+springfox:
+  documentation:
+    swagger-ui:
+      enabled: true
+
+#file:
+#  # 必须在末尾加上单斜杠
+#  upload-path: E:/upload/img/
+#  journey-img-upload-path: E:/upload/journey/
+#access:
+#  log-path: E:/access/
+npe:
+  resources:
+    article-img-path: ${npe.dev-static-resources.article-img-path}
+    journey-img-path: ${npe.dev-static-resources.journey-img-path}
+    attach-path: ${npe.dev-static-resources.attach-path}
+    log-path: ${npe.dev-static-resources.log-path}
+# 自定义日志路径
+logback:
+  logDir: E:/npe-resources/log/
+  appName: npe-dev

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:with="title='评论管理', active='comment-manager'"
+      xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>NPE Admin | Comment Manager</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <th:block th:replace="/admin/common/_common_css::common_css">
+        <!--/* css */-->
+    </th:block>
+</head>
+<body class="hold-transition sidebar-mini">
+<!-- Site wrapper -->
+<div class="wrapper">
+    <th:block th:replace="/admin/common/_navbar::navbar(${active})">
+        <!--/* 导航条 */-->
+    </th:block>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>[[${title}]]</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">首页</a></li>
+                            <li class="breadcrumb-item active">[[${title}]]</li>
+                        </ol>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+
+            <!-- Default box -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">[[${title}]]</h3>
+                </div>
+                <div class="card-body p-0">
+                    <!--/* table-sm 控制table的最小宽度，否则整个table会变形 */-->
+                    <table class="table table-striped projects table-sm">
+                        <thead>
+                        <tr>
+                            <th style="width: 1%">
+                                #
+                            </th>
+                            <th style="width: 6%" class="text-center">
+                                评论文章Id
+                            </th>
+                            <th style="width: 20%">
+                                评论内容
+                            </th>
+                            <th style="width: 10%" class="text-center">
+                                评论时间
+                            </th>
+                            <th class="text-center">
+                                状态
+                            </th>
+                            <th class="text-center">
+                                评论人
+                            </th>
+                            <th style="width: 20%" class="text-left">
+                                操作
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <th:block th:each="comment: ${comments}">
+                            <tr>
+                                <td>
+                                    [[${comment.id}]]
+                                </td>
+                                <td class="text-center">
+                                    [[${comment.articleId}]]
+                                </td>
+                                <td>
+                                    <a href="#">
+                                        [[${comment.content}]]
+                                    </a>
+                                </td>
+                                <td>
+                                    [[${comment.createTime}]]
+                                </td>
+                                <td class="project-state text-center">
+                                    <div th:if="${comment.passAudit}">
+                                        <span class="badge badge-success">审核通过</span>
+                                    </div>
+                                    <div th:unless="${comment.passAudit}">
+                                        <span class="badge badge-secondary">未审核</span>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    [[${comment.nickname}]]
+                                </td>
+                                <td class="project-actions text-left">
+                                    <th:block th:unless="${comment.passAudit}">
+                                        <a href="javascript:void(0)" th:onclick="'passAudit(' + ${comment.id}+')'" class="btn btn-success btn-sm">
+                                            <i class="fas fa-pencil-alt">
+                                            </i>
+                                            审核通过
+                                        </a>
+                                    </th:block>
+                                    <th:block th:if="${comment.passAudit}">
+                                        <a href="#" class="btn btn-success btn-sm disabled">
+                                            <i class="fas fa-pencil-alt">
+                                            </i>
+                                            审核通过
+                                        </a>
+                                    </th:block>
+                                    <a class="btn btn-danger btn-sm" href="#">
+                                        <i class="fas fa-trash">
+                                        </i>
+                                        删除
+                                    </a>
+                                </td>
+                            </tr>
+                        </th:block>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.card-body -->
+                <!--分页-->
+                <div th:replace="/admin/common/_pagination::pageAdminNav(${pageInfo})"></div>
+            </div>
+            <!-- /.card -->
+
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    <!-- Main Footer -->
+    <footer th:replace="/common/_footer::footer">
+        <!--页脚-->
+    </footer>
+
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+        <!-- Control sidebar content goes here -->
+    </aside>
+    <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+
+<!--/* js */-->
+<th:block th:replace="/admin/common/_common_js::common_js">
+    <!--/* replace的引用目录必须从根目录开始 */-->
+</th:block>
+
+<script type="text/javascript" th:inline="javascript">
+    function passAudit(commentId) {
+        Swal.fire({
+            title: '审核通过',
+            text: "是否确定通过该条评论",
+            icon: 'warning',
+            showCancelButton: true,
+            cancelButtonText:'取消',
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '通过'
+        }).then((result) => {
+
+            if (result.value) {
+
+                $.ajax({
+                    url: /*[[@{/admin/comment/manager/passAudit}]]*/"",
+                    data: {
+                        commentId: commentId,
+                    },
+                    type: "POST",
+                    dataType: "text",
+                    success: function(data) {
+                        console.log("success");
+                        Swal.fire(
+                            '评论',
+                            '评论以通过',
+                            'success'
+                        )
+                        window.location.reload();
+                    },
+                    error: function (data) {
+                        console.log("error");
+                        Swal.fire(
+                            '评论',
+                            '评论通过失败，请重新尝试',
+                            'error'
+                        )
+                    }
+                });
+            }
+        });
+    }
+</script>
+</body>
+</html>
