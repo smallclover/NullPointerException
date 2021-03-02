@@ -22,7 +22,7 @@
     </select>
 
     <!-- 获取文章总数 -->
-    <select id="getArticleCount" resultMap="article">
+    <select id="getArticleCount" resultType="Long">
         SELECT count(*) FROM article
     </select>
 

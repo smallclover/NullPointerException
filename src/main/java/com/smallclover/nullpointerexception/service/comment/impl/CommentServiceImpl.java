@@ -4,6 +4,7 @@ import com.smallclover.nullpointerexception.dto.CommentDto;
 import com.smallclover.nullpointerexception.mapper.CommentMapper;
 import com.smallclover.nullpointerexception.model.Comment;
 import com.smallclover.nullpointerexception.service.comment.CommentService;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +12,9 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * 评论管理服务层
@@ -26,16 +29,6 @@ public class CommentServiceImpl implements CommentService {
 
     public CommentServiceImpl(CommentMapper commentMapper) {
         this.commentMapper = commentMapper;
-    }
-
-    @Override
-    public List<Comment> getTopComment(long articleId) {
-        return commentMapper.getArticleTopComment(articleId);
-    }
-
-    @Override
-    public List<Comment> getTopChildComment(long articleId, String commentParentId) {
-        return commentMapper.getArticleTopChildComment(articleId, commentParentId);
     }
 
     @Override
@@ -75,15 +68,34 @@ public class CommentServiceImpl implements CommentService {
         return commentMapper.getCommentByCommentId(commentId);
     }
 
+    /**
+     * 获取文章的评论
+     * @param articleId
+     * @return 文章的所有评论
+     */
     @Override
     public List<CommentDto> getCommentsByArticleId(long articleId) {
         List<CommentDto> commentDTOList = new ArrayList<>();
-        List<Comment> comments = getTopComment(articleId);
+        // 该篇文章的所有评论
+        List<Comment> comments = commentMapper.getCommentsByArticleId(articleId);
 
-        for (Comment comment: comments){
+        // 没有评论的时候直接返回
+        if (CollectionUtils.isEmpty(comments)){
+            return commentDTOList;
+        }
+
+        // 父评论和子评论设置
+        List<Comment> topComments = comments.stream()
+                .filter( comment -> Objects.isNull(comment.getCommentParentId()))
+                .collect(Collectors.toList());
+
+        for (Comment comment: topComments){
             CommentDto commentDTO = new CommentDto();
             BeanUtils.copyProperties(comment, commentDTO);
-            var childCommentList = getTopChildComment(articleId, comment.getUserId());
+
+            List<Comment> childCommentList = comments.stream()
+                    .filter(tmp -> comment.getUserId().equals(tmp.getCommentParentId()))
+                    .collect(Collectors.toList());
 
             commentDTO.setChildComments(childCommentList);
             commentDTOList.add(commentDTO);

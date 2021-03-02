@@ -11,10 +11,6 @@ import java.util.List;
  */
  public interface CommentService {
 
-     List<Comment> getTopComment(long articleId);
-
-     List<Comment> getTopChildComment(long articleId, String commentParentId);
-
      List<Comment> getAllComments();
 
      long getCommentCount();
