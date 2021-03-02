@@ -25,45 +25,23 @@ public interface ArticleMapper {
      * 查找所有文章
      * @return 返回所有文章列表
      */
-//    OpenJDK 13
-//    @Select("""
-//            SELECT *
-//            FROM article
-//            """)
-    @Select("SELECT * FROM article")
-    @Results(id = "article",value = {
-        @Result(property = "createTime", column = "create_time"),
-        @Result(property = "mdContent", column = "md_content"),
-        @Result(property = "htmlContent", column = "html_content"),
-        @Result(property = "contentView", column = "content_view"),
-        @Result(property = "deleteFlag", column = "delete_flag")
-    })
+    @ResultMap("article")// 通过id来直接引用resultMap
     @Cacheable(cacheNames = "articles")
     List<Article> getAllArticles();
-
-    /**
-     * 获取所有文章，根据创建时间降顺
-     * @return
-     */
-    @Select("SELECT * FROM article ORDER BY create_time DESC")
-    @ResultMap("article")
-    List<Article> getAllArticlesOrderByCreateTime();
 
     /**
      * 根据指定的id来获得文章
      * @param id 文章id
      * @return 文章实体类
      */
-    @Select("SELECT * FROM article WHERE id = #{id}")
-    @ResultMap("article")// 通过引用Results的id直接使用之前声明过的Results
+    @ResultMap("article")
     @Cacheable(cacheNames = "article", key = "#id")
     Article getArticleById(@Param("id") long id);
 
     /**
-     * 获取文章数量
+     * 获取文章总数
      * @return 文章总数
      */
-    @Select("SELECT count(*) FROM article")
     long getArticleCount();
 
     /**
@@ -74,15 +52,35 @@ public interface ArticleMapper {
     @CacheEvict(cacheNames = "articles", allEntries = true)
     long insertArticle(Article article);
 
-    @Update("UPDATE article SET delete_flag=#{deleteFlag} WHERE id = #{articleId}")
+    /**
+     * 删除指定id的文章，同时更新缓存
+     * 1.删除该id文章的缓存
+     * 2.从文章列表的缓存中删除该id的文章
+     * @param articleId
+     * @param deleteFlag
+     * @return
+     */
     @Caching(evict = {
             @CacheEvict(cacheNames = "article", key = "#articleId"),
             @CacheEvict(cacheNames = "articles", allEntries = true)
     })
     long deleteArticleById(long articleId,boolean deleteFlag);
 
-    @Update("UPDATE article SET status=#{status},publish=#{publish} WHERE id = #{articleId}")
-    long updateArticleById(long articleId, boolean publish, boolean status);
+    /**
+     * 更新文章的状态
+     * 1.是否发布
+     * 2.草稿还是已完成
+     * @param articleId
+     * @param publish
+     * @param status
+     * @return
+     */
+    long updateArticleStatusById(long articleId, boolean publish, boolean status);
 
+    /**
+     * 查找指定的id列表的文章列表
+     * @param ids
+     * @return
+     */
     List<Article> getArticlesByIds(List<Long> ids);
 }

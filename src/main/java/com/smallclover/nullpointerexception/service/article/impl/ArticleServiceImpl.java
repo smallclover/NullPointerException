@@ -1,6 +1,7 @@
 package com.smallclover.nullpointerexception.service.article.impl;
 
 import com.smallclover.nullpointerexception.dto.ArticleDto;
+import com.smallclover.nullpointerexception.exception.ArticleException;
 import com.smallclover.nullpointerexception.mapper.CategoryArticleMapper;
 import com.smallclover.nullpointerexception.mapper.TagArticleMapper;
 import com.smallclover.nullpointerexception.mapper.TagMapper;
@@ -67,7 +68,16 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public Article getArticleById(long id) {
-        return articleMapper.getArticleById(id);
+        Article article = articleMapper.getArticleById(id);
+
+        if (Objects.isNull(article)){
+            throw new ArticleException("文章不存在");
+        }
+
+        if (!article.isPublish()){
+            throw new ArticleException("该文章没有访问权限");
+        }
+        return article;
     }
 
     @Override
@@ -131,7 +141,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public boolean publishArticle(long articleId) {
-        long count = articleMapper.updateArticleById(articleId, true, false);
+        long count = articleMapper.updateArticleStatusById(articleId, true, false);
         return count >= 0;
     }
 
@@ -140,8 +150,4 @@ public class ArticleServiceImpl implements ArticleService {
         return articleMapper.getArticlesByIds(articleIds);
     }
 
-    @Override
-    public List<Article> getArticlesOrderByCreateTime() {
-        return articleMapper.getAllArticlesOrderByCreateTime();
-    }
 }

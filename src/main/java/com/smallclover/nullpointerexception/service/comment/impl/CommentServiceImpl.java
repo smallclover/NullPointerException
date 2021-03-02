@@ -76,7 +76,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentDto> getArticleCommentsByArticleId(long articleId) {
+    public List<CommentDto> getCommentsByArticleId(long articleId) {
         List<CommentDto> commentDTOList = new ArrayList<>();
         List<Comment> comments = getTopComment(articleId);
 

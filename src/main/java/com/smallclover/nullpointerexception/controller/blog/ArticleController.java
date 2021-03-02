@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -44,7 +45,7 @@ public class ArticleController{
     //TODO 缓存的引入
 
     /**
-     * 显示指定Id文章
+     * 文章详细
      * @param articleId
      * @return
      */
@@ -52,25 +53,17 @@ public class ArticleController{
     public ModelAndView articleDetail(@PathVariable("id") long articleId){
 
         Article article = articleService.getArticleById(articleId);
+        List<CommentDto> comments = commentService.getCommentsByArticleId(articleId);
 
-        if (Objects.isNull(article)){
-            throw new ArticleException("文章不存在");
-        }
-
-        if (!article.isPublish()){
-            throw new ArticleException("该文章没有访问权限");
-        }
-        var commentDTOList = commentService.getArticleCommentsByArticleId(articleId);
         var mv = new ModelAndView();
-
         mv.addObject("article",article);
-        mv.addObject("comments", commentDTOList);
+        mv.addObject("comments", comments);
         mv.setViewName("/blog/article_detail");
         return mv;
     }
 
     /**
-     * 显示文章列表
+     * 文章列表
      * @param page
      * @param pageSize
      * @return

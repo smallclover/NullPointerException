@@ -51,6 +51,4 @@ public interface ArticleService {
     boolean publishArticle(long articleId);
 
     List<Article> getArticlesByIds(List<Long> articleIds);
-
-    List<Article> getArticlesOrderByCreateTime();
 }

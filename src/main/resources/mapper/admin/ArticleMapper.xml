@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.smallclover.nullpointerexception.mapper.ArticleMapper">
+    <!-- 文章实体类 -->
+    <resultMap id="article" type="com.smallclover.nullpointerexception.model.Article">
+        <id property="id" column="id" />
+        <result property="createTime" column="create_time"/>
+        <result property="mdContent" column="md_content" />
+        <result property="htmlContent" column="html_content" />
+        <result property="contentView" column="content_view" />
+        <result property="deleteFlag" column="delete_flag" />
+    </resultMap>
+
+    <!-- 查找所有文章 -->
+    <select id="getAllArticles" resultMap="article">
+        SELECT * FROM article ORDER BY create_time DESC
+    </select>
+
+    <!-- 根据Id查找所有文章 -->
+    <select id="getArticleById" resultMap="article">
+        SELECT * FROM article WHERE id = #{id}
+    </select>
+
+    <!-- 获取文章总数 -->
+    <select id="getArticleCount" resultMap="article">
+        SELECT count(*) FROM article
+    </select>
+
     <!--parameterMap 在这会报错 Mybatis中Parameter Maps collection does not contain value for xxx-->
     <insert id="insertArticle" useGeneratedKeys="true" keyProperty="id"
             parameterType="com.smallclover.nullpointerexception.model.Article">
-        INSERT INTO article (
-                             title,
+        INSERT INTO article (title,
                              `desc`,
                              md_content,
                              html_content,
@@ -28,14 +52,20 @@
                 #{deleteFlag}
                )
     </insert>
-    <!-- 注解里定义的resultMap引用，否则无法转换 -->
-    <select id="getArticlesByIds" resultType="com.smallclover.nullpointerexception.model.Article" resultMap="article">
-        SELECT
-            *
-        FROM
-            article
-        WHERE
-            id IN 
+
+    <!--删除指定id的文章-->
+    <update id="deleteArticleById">
+        UPDATE article SET delete_flag=#{deleteFlag} WHERE id = #{articleId}
+    </update>
+
+    <!--更新指定id的文章的状态-->
+    <update id="updateArticleStatusById">
+        UPDATE article SET status=#{status},publish=#{publish} WHERE id = #{articleId}
+    </update>
+
+    <!--获取指定的id列表的文章列表-->
+    <select id="getArticlesByIds" resultMap="article">
+        SELECT * FROM article WHERE id IN
         <foreach collection="list" item="articleId" index="index"
             open="(" separator="," close=")">
             #{articleId}

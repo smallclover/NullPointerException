@@ -1,5 +1,6 @@
 package com.smallclover.nullpointerexception.controller.blog;
 
+import com.smallclover.nullpointerexception.dto.ArticleDto;
 import com.smallclover.nullpointerexception.model.Article;
 import com.smallclover.nullpointerexception.service.article.ArticleService;
 import lombok.AllArgsConstructor;
@@ -26,7 +27,7 @@ public class ArchiveController {
         // TODO 前台blog分页共通
         // TODO 如何根据年份来分
         // TODO 开发日志页面显示问题，后台提交提示问题
-        List<Article> articles = articleService.getArticlesOrderByCreateTime();
+        List<ArticleDto> articles = articleService.getAllArticles();
         model.addAttribute("articles", articles);
         return "/blog/archive";
     }

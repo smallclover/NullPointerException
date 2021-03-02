@@ -25,5 +25,5 @@ import java.util.List;
     
      Comment getCommentByCommentId(long commentId);
 
-    List<CommentDto> getArticleCommentsByArticleId(long articleId);
+    List<CommentDto> getCommentsByArticleId(long articleId);
 }
