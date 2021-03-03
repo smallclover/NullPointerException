@@ -17,7 +17,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
- * 评论管理服务层
+ * 评论服务层
  * @Author: Amadeus
  * @Date: 2020/3/28 10:36
  */

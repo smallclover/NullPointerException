@@ -37,25 +37,33 @@ public class ArticleServiceImpl implements ArticleService {
 
     // 文章Mapper
     private ArticleMapper articleMapper;
+    // 标签service
     private TagService tagService;
-    private CategoryService categoryService;
-    private TagArticleMapper tagArticleMapper;
-    private CategoryArticleMapper categoryArticleMapper;
+    // 标签mapper
     private TagMapper tagMapper;
+    // 标签文章Mapper
+    private TagArticleMapper tagArticleMapper;
+    // 分类service
+    private CategoryService categoryService;
+    // 分类文章Mapper
+    private CategoryArticleMapper categoryArticleMapper;
 
     @Override
     public List<ArticleDto> getAllArticles() {
         List<Article> articles = articleMapper.getAllArticles();
-        List<Long> articleIds = articles.stream().map(Article::getId).collect(Collectors.toList());
-        var articleIdAndCategoryMap = categoryService.getCategoryByArticleIds(articleIds);
-        var articleIdAndTagsMap = tagService.getTagsByArticleIds(articleIds);
+        List<ArticleTagCategory> articleTagCategories = articleMapper.getAllArticleTagCategory();
 
         var articleDTOs = new ArrayList<ArticleDto>();
         for(Article article: articles){
             ArticleDto articleDTO = new ArticleDto();
             BeanUtils.copyProperties(article, articleDTO);
-            articleDTO.setTags(articleIdAndTagsMap.get(article.getId()));
-            articleDTO.setCategory(articleIdAndCategoryMap.get(article.getId()));
+            for (ArticleTagCategory articleTagCategory: articleTagCategories){
+                if (articleTagCategory.getArticleId() == article.getId()){
+                    articleDTO.setTags(articleTagCategory.getTagName());
+                    articleDTO.setCategory(articleTagCategory.getCategoryName());
+                    break;
+                }
+            }
             articleDTOs.add(articleDTO);
         }
         return articleDTOs;

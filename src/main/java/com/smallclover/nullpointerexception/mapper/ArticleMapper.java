@@ -1,6 +1,7 @@
 package com.smallclover.nullpointerexception.mapper;
 
 import com.smallclover.nullpointerexception.model.Article;
+import com.smallclover.nullpointerexception.model.ArticleTagCategory;
 import com.smallclover.nullpointerexception.model.DevelopLog;
 import org.apache.ibatis.annotations.*;
 import org.springframework.cache.annotation.CacheEvict;
@@ -83,4 +84,10 @@ public interface ArticleMapper {
      * @return
      */
     List<Article> getArticlesByIds(List<Long> ids);
+
+    /**
+     * 获取所有文章以及与其相配的标签和目录
+     * @return
+     */
+    List<ArticleTagCategory> getAllArticleTagCategory();
 }
