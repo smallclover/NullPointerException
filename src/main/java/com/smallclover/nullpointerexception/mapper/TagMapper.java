@@ -1,5 +1,6 @@
 package com.smallclover.nullpointerexception.mapper;
 
+import com.smallclover.nullpointerexception.model.Article;
 import com.smallclover.nullpointerexception.model.ArticleTagCategory;
 import com.smallclover.nullpointerexception.model.Tag;
 import org.apache.ibatis.annotations.*;
@@ -24,9 +25,6 @@ public interface TagMapper {
     })
     List<Tag> getAllTags();
 
-    @Select("SELECT * FROM tag WHERE tag_name=#{tagName}")
-    Tag getTagIdByTagName(String tagName);
-
     List<Tag> getTagsByTagNames(List<String> tagNames);
     List<Tag> getTagsFormTagByTagNames(List<String> tagNames);
     List<ArticleTagCategory> getTagsByArticleIds(List<Long> articleIds);
@@ -34,4 +32,6 @@ public interface TagMapper {
     long insertTags(List<Tag> tags);
 
     long insertTag(Tag tag);
+
+    List<Article> getArticlesByTagName(String tagName);
 }

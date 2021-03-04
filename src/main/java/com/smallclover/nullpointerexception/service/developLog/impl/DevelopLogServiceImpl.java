@@ -1,8 +1,9 @@
-package com.smallclover.nullpointerexception.service.developLog;
+package com.smallclover.nullpointerexception.service.developLog.impl;
 
 import com.smallclover.nullpointerexception.dto.DevelopLogDto;
 import com.smallclover.nullpointerexception.mapper.DevelopLogMapper;
 import com.smallclover.nullpointerexception.model.DevelopLog;
+import com.smallclover.nullpointerexception.service.developLog.DevelopLogService;
 import com.smallclover.nullpointerexception.util.TimeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -58,7 +58,17 @@
             #{item}
         </foreach>
     </select>
-<!--    <insert id="insertTagArticle" >-->
-<!--        INSERT INTO tag_article(tag_id, article_id, create_time, delete_flag) -->
-<!--    </insert>-->
+
+    <select id="getArticlesByTagName" resultMap="com.smallclover.nullpointerexception.mapper.ArticleMapper.article">
+        SELECT
+            *
+        FROM
+            tag
+                INNER JOIN
+            tag_article ta ON tag.id = ta.tag_id
+                INNER JOIN
+            article a ON ta.article_id = a.id
+        WHERE tag_name = #{tagName}
+    </select>
+
 </mapper>

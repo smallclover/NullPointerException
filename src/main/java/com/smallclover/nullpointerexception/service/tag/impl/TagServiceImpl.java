@@ -37,13 +37,14 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public List<Article> getArticlesByTagName(String tagName) {
-
-        var tag = tagMapper.getTagIdByTagName(tagName);
-        var articleIds = tagArticleMapper.getAllArticleIdByTagId(tag.getId());
-        return articleMapper.getArticlesByIds(articleIds);
+        return tagMapper.getArticlesByTagName(tagName);
     }
 
-    @Override
+    /**
+     * 根据标签名取得该标签名所代表的标签实体
+     * @param tagNames
+     * @return
+     */
     public List<Tag> getTagsByTagNames(List<String> tagNames) {
         return tagMapper.getTagsByTagNames(tagNames);
     }
@@ -113,11 +114,5 @@ public class TagServiceImpl implements TagService {
             tagDtoList.add(tagDTO);
         }
         return tagDtoList;
-    }
-
-    public static void main(String[] args) {
-        String tags = "hello,hi";
-        String[] strs = StringUtils.split(tags,DELIMITER);
-        Arrays.asList(strs).forEach(System.out::println);
     }
 }
