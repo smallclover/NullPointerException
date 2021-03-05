@@ -5,11 +5,11 @@
     <title>footer</title>
 </head>
 <body>
-    <footer class="main-footer" th:fragment="footer">
-        <strong>Copyright &copy; 2019-2020 <a href="http://nullpointerexception.cf">NullPointerException</a>.</strong>
+    <footer class="main-footer" th:fragment="footer(settingDto)">
+        <strong>Copyright &copy; 2019-2020 <a href="http://nullpointerexception.cf">[[${settingDto.siteName}]]</a>.</strong>
         All rights reserved.
         <div class="float-right d-none d-sm-inline-block">
-            <b>Version</b> 0.0.1
+            <b>Version</b> [[${settingDto.appVersion}]]
         </div>
     </footer>
 </body>

@@ -27,11 +27,15 @@ public interface TagService {
     List<Article> getArticlesByTagName(String tagName);
 
     /**
-     * 根据文章id获取该文章拥有的标签
-     * @param articleIds
+     * 插入标签
+     * @param tags
      * @return
      */
-    Map<Long, String> getTagsByArticleIds(List<Long> articleIds);
     boolean insertTags(String tags);
+
+    /**
+     * 获取标签云
+     * @return
+     */
     List<TagDto> getTagCloud();
 }

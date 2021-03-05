@@ -78,10 +78,25 @@
              , category_name AS categoryName
              , GROUP_CONCAT(tag_name) AS tagName
         FROM article
-                 INNER JOIN tag_article ta ON article.id = ta.article_id
-                 INNER JOIN tag t ON ta.tag_id = t.id
+                 LEFT JOIN tag_article ta ON article.id = ta.article_id
+                 LEFT JOIN tag t ON ta.tag_id = t.id
                  INNER JOIN category_article ca ON article.id = ca.article_id
                  INNER JOIN category c ON ca.category_id = c.id
+        GROUP BY article.id, category_name
+    </select>
+
+    <!--获取所有文章所对应的标签和分类-->
+    <select id="getArticleTagCategoryByArticleId" resultType="com.smallclover.nullpointerexception.model.ArticleTagCategory">
+        SELECT
+            article.id AS articleId
+             , category_name AS categoryName
+             , GROUP_CONCAT(tag_name) AS tagName
+        FROM article
+                 LEFT JOIN tag_article ta ON article.id = ta.article_id
+                 LEFT JOIN tag t ON ta.tag_id = t.id
+                 INNER JOIN category_article ca ON article.id = ca.article_id
+                 INNER JOIN category c ON ca.category_id = c.id
+        WHERE article.id = #{articleId}
         GROUP BY article.id, category_name
     </select>
 </mapper>

@@ -78,16 +78,12 @@ public interface ArticleMapper {
      */
     long updateArticleStatusById(long articleId, boolean publish, boolean status);
 
-    /**
-     * 查找指定的id列表的文章列表
-     * @param ids
-     * @return
-     */
-    List<Article> getArticlesByIds(List<Long> ids);
 
     /**
      * 获取所有文章以及与其相配的标签和目录
      * @return
      */
     List<ArticleTagCategory> getAllArticleTagCategory();
+
+    ArticleTagCategory getArticleTagCategoryByArticleId(long articleId);
 }

@@ -68,7 +68,10 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <select id="category" class="form-control" style="width: 100%;">
-                                            <div th:each="category: ${categorys}">
+                                            <div th:if="${updateArticle ne null}">
+                                                <option>[[${updateArticle.category}]]</option>
+                                            </div>
+                                            <div th:if="${updateArticle eq null}" th:each="category: ${categorys}">
                                                 <option>[[${category.categoryName}]]</option>
                                             </div>
                                         </select>
@@ -85,7 +88,8 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <input id="input_tags" type="text" data-role="tagsinput" placeholder="请填写文章标签">
+                                        <input id="input_tags" type="text" data-role="tagsinput" placeholder="请填写文章标签"
+                                               th:value="${updateArticle ne null}?${updateArticle.tags}:''">
                                     </div>
                                 </div>
                             </div>
@@ -130,7 +134,7 @@
     </div>
     <!-- /.content-wrapper -->
     <!-- Main Footer -->
-    <footer th:replace="/admin/common/_footer::footer">
+    <footer th:replace="/admin/common/_footer::footer(${settingDto})">
         <!--页脚-->
     </footer>
     <!-- Control Sidebar -->

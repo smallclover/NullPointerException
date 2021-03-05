@@ -30,53 +30,45 @@ public class TagServiceImpl implements TagService {
     private ArticleMapper articleMapper;
     public static final String DELIMITER = ",";
 
+    /**
+     * 获取所有标签
+     * @return
+     */
     @Override
     public List<Tag> getAllTags() {
         return tagMapper.getAllTags();
     }
 
+    /**
+     * 通过标签名获得拥有该标签的所有文章
+     * @param tagName
+     * @return
+     */
     @Override
     public List<Article> getArticlesByTagName(String tagName) {
         return tagMapper.getArticlesByTagName(tagName);
     }
 
     /**
-     * 根据标签名取得该标签名所代表的标签实体
-     * @param tagNames
+     * 插入标签
+     * @param tags
      * @return
      */
-    public List<Tag> getTagsByTagNames(List<String> tagNames) {
-        return tagMapper.getTagsByTagNames(tagNames);
-    }
-
-    @Override
-    public Map<Long, String> getTagsByArticleIds(List<Long> articleIds) {
-
-        List<ArticleTagCategory> articleTagCategories = tagMapper.getTagsByArticleIds(articleIds);
-
-        var articleIdAndTagsMap = new HashMap<Long, String>();
-        for (ArticleTagCategory atc: articleTagCategories){
-            String tags = atc.getTagName() + "," + articleIdAndTagsMap.getOrDefault(atc.getArticleId(), "");
-            articleIdAndTagsMap.put(atc.getArticleId(), tags);
-        }
-
-
-        return articleIdAndTagsMap;
-    }
-
     @Override
     public boolean insertTags(String tags) {
         String[] tagNames = StringUtils.split(tags,DELIMITER);
         long count = 0;
+
+        var tagList = new ArrayList<Tag>();
+
         if (Objects.isNull(tagNames)){
             var tag = new Tag();
             tag.setTagName(tags);
             tag.setCreateTime(LocalDateTime.now());
             tag.setUpdateTime(LocalDateTime.now());
             tag.setDeleteFlag(false);
-            count = tagMapper.insertTag(tag);
+            tagList.add(tag);
         }else{
-            var tagList = new ArrayList<Tag>();
             for (String tagName: tagNames){
                 var tag = new Tag();
                 tag.setTagName(tagName);
@@ -85,21 +77,26 @@ public class TagServiceImpl implements TagService {
                 tag.setDeleteFlag(false);
                 tagList.add(tag);
             }
-            count = tagMapper.insertTags(tagList);
         }
+        count = tagMapper.insertTags(tagList);
 
         return count > 0;
     }
 
+    public static void main(String[] args) {
+        String tags = "tag1,tag2";
+        String[] tagNames = StringUtils.split(tags,DELIMITER);
+        System.out.println(tagNames.length);
+    }
+
+    /**
+     * 获得标签云数据
+     * @return
+     */
     @Override
     public List<TagDto> getTagCloud() {
-        List<String> tagNames = getAllTags()
-                .stream()
-                .map(Tag::getTagName)
-                .collect(Collectors.toList());
-        List<Tag> tags = getTagsByTagNames(tagNames);
+        List<Tag> tags = getAllTags();
         var map = new HashMap<String, Integer>();
-
 
         // 标签名:权重
         for (Tag tag: tags){

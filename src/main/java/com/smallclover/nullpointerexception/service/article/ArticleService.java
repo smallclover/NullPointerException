@@ -18,16 +18,10 @@ public interface ArticleService {
     List<ArticleDto> getAllArticles();
 
     /**
-     * 取得所有文章不包括分类
-     * @return 文章实体类列表
-     */
-    List<Article> getAllArticleNoCategory();
-
-    /**
      * 通过文章id来获取文章
      * @return 文章实体类
      */
-    Article getArticleById(long id);
+    ArticleDto getArticleById(long id);
 
     /**
      * 获取文章数
@@ -50,5 +44,4 @@ public interface ArticleService {
 
     boolean publishArticle(long articleId);
 
-    List<Article> getArticlesByIds(List<Long> articleIds);
 }

@@ -26,12 +26,8 @@ public interface TagMapper {
     List<Tag> getAllTags();
 
     List<Tag> getTagsByTagNames(List<String> tagNames);
-    List<Tag> getTagsFormTagByTagNames(List<String> tagNames);
-    List<ArticleTagCategory> getTagsByArticleIds(List<Long> articleIds);
 
     long insertTags(List<Tag> tags);
-
-    long insertTag(Tag tag);
 
     List<Article> getArticlesByTagName(String tagName);
 }

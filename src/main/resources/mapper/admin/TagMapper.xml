@@ -1,25 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.smallclover.nullpointerexception.mapper.TagMapper">
-    <!-- 注解里定义的resultMap引用，否则无法转换 -->
-    <select id="getTagsByTagNames" resultType="com.smallclover.nullpointerexception.model.Tag" resultMap="tag">
-        SELECT
-            *
-        FROM
-            tag_article ta
-        INNER JOIN tag t on ta.tag_id = t.id
-        WHERE
-            ta.delete_flag = false
-        AND
-            t.delete_flag = false
-        AND
-            t.tag_name
-        IN
-        <foreach collection="list" item="tagName" index="index"
-                 open="(" separator="," close=")">
-            #{tagName}
-        </foreach>
-    </select>
 
     <resultMap id="articleTagCategory" type="com.smallclover.nullpointerexception.model.ArticleTagCategory">
         <result property="articleId" column="article_id" />
@@ -29,16 +10,6 @@
         <result property="categoryName" column="category_name" />
     </resultMap>
 
-    <select id="getTagsByArticleIds" resultMap="articleTagCategory">
-        SELECT * FROM tag_article ta INNER  JOIN  tag t ON ta.tag_id = t.id
-        WHERE ta.delete_flag = false AND t.delete_flag = false
-        AND ta.article_id IN
-        <foreach collection="list" item="articleId" index="index"
-                 open="(" separator="," close=")">
-            #{articleId}
-        </foreach>
-    </select>
-
     <insert id="insertTags">
         INSERT INTO tag (tag_name, update_time, create_time, delete_flag)
         VALUES
@@ -47,12 +18,7 @@
         </foreach>
     </insert>
 
-    <insert id="insertTag">
-        INSERT INTO tag (tag_name, update_time, create_time, delete_flag)
-        VALUES(#{tagName}, #{updateTime}, #{createTime}, #{deleteFlag})
-    </insert>
-
-    <select id="getTagsFormTagByTagNames" resultMap="tag">
+    <select id="getTagsByTagNames" resultMap="tag">
         SELECT * FROM tag WHERE tag.tag_name IN
         <foreach collection="list" item="item" open="(" separator="," close=")">
             #{item}

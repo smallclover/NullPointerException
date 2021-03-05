@@ -1,5 +1,7 @@
 package com.smallclover.nullpointerexception.controller.common;
 
+import com.smallclover.nullpointerexception.dto.SettingDto;
+import com.smallclover.nullpointerexception.service.setting.SettingService;
 import com.smallclover.nullpointerexception.service.visit.VisitService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,18 +21,13 @@ import java.util.Map;
 @AllArgsConstructor
 public class BaseController {
 
-//    // 获取网站信息
-//    private WebSiteService webSiteService;
-//
-//    public BaseController(WebSiteService webSiteService) {
-//        this.webSiteService = webSiteService;
-//    }
+    // 网站的设置信息
+    private final SettingService settingService;
+
 
     @ModelAttribute
     public void webSiteConfig(Model model){
-
-//        // 网站的配置信息
-//        var config = webSiteService.getWebSiteConfig();
-//        model.addAttribute("config", config);
+        SettingDto settingDto = settingService.getAllSetting();
+        model.addAttribute("settingDto", settingDto);
     }
 }

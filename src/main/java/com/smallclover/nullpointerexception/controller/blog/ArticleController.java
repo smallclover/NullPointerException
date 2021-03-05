@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.smallclover.nullpointerexception.constant.ResponseStatusCode;
 import com.smallclover.nullpointerexception.api.rep.ApiResponse;
+import com.smallclover.nullpointerexception.dto.ArticleDto;
 import com.smallclover.nullpointerexception.dto.CommentDto;
 import com.smallclover.nullpointerexception.exception.ArticleException;
 import com.smallclover.nullpointerexception.model.Article;
@@ -52,11 +53,11 @@ public class ArticleController{
     @GetMapping("/detail/{id}")
     public ModelAndView articleDetail(@PathVariable("id") long articleId){
 
-        Article article = articleService.getArticleById(articleId);
+        ArticleDto articleDto = articleService.getArticleById(articleId);
         List<CommentDto> comments = commentService.getCommentsByArticleId(articleId);
 
         var mv = new ModelAndView();
-        mv.addObject("article",article);
+        mv.addObject("article", articleDto);
         mv.addObject("comments", comments);
         mv.setViewName("/blog/article_detail");
         return mv;

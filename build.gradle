@@ -82,8 +82,3 @@ war {
     enabled = true
     archiveName 'npe.war'
 }
-
-// 现在用JDK13在Gradle上有点问题
-//compileJava{
-//    options.compilerArgs += ["--enable-preview"]
-//}

@@ -70,14 +70,8 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Article> getAllArticleNoCategory() {
-        return articleMapper.getAllArticles();
-    }
-
-    @Override
-    public Article getArticleById(long id) {
+    public ArticleDto getArticleById(long id) {
         Article article = articleMapper.getArticleById(id);
-
         if (Objects.isNull(article)){
             throw new ArticleException("文章不存在");
         }
@@ -85,7 +79,16 @@ public class ArticleServiceImpl implements ArticleService {
         if (!article.isPublish()){
             throw new ArticleException("该文章没有访问权限");
         }
-        return article;
+        // 获取文章的标签和分类
+        ArticleTagCategory articleTagCategory = articleMapper.getArticleTagCategoryByArticleId(id);
+
+        ArticleDto articleDto = new ArticleDto();
+
+        BeanUtils.copyProperties(article, articleDto);
+        articleDto.setCategory(articleTagCategory.getCategoryName());
+        articleDto.setTags(articleTagCategory.getTagName());
+
+        return articleDto;
     }
 
     @Override
@@ -121,7 +124,7 @@ public class ArticleServiceImpl implements ArticleService {
         article.setCreateTime(new Timestamp(System.currentTimeMillis()));
         long count = articleMapper.insertArticle(article);
 
-        List<Tag> tagList = tagMapper.getTagsFormTagByTagNames(tags);
+        List<Tag> tagList = tagMapper.getTagsByTagNames(tags);
         Category category = categoryService.getCategoryByCategoryName(articleDto.getCategory());
 
         List<TagArticle> tagArticleList = new ArrayList<>();
@@ -151,11 +154,6 @@ public class ArticleServiceImpl implements ArticleService {
     public boolean publishArticle(long articleId) {
         long count = articleMapper.updateArticleStatusById(articleId, true, false);
         return count >= 0;
-    }
-
-    @Override
-    public List<Article> getArticlesByIds(List<Long> articleIds) {
-        return articleMapper.getArticlesByIds(articleIds);
     }
 
 }
